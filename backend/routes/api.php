@@ -6,6 +6,11 @@ use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MaterialUserController;
+
+// Auth routes
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::get('/foes', [FoeController::class, 'index']);
 Route::get('/equipment', [EquipmentController::class, 'index']);
@@ -27,7 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Protected routes for authenticated users
     Route::get('/user/materials', [UserController::class, 'getUserMaterials']);
     Route::get('/user/equipment', [UserController::class, 'getUserEquipment']);
-});
+    Route::post('/equipment/craft', [EquipmentController::class, 'craftEquipment']);
 
-Route::post('/login', [AuthController::class, 'login']);
-Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+    Route::post('/materials/add', [MaterialUserController::class, 'addMaterial']);
+});
