@@ -9,6 +9,19 @@ class Foe extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+    
+    protected $primaryKey = 'foe_id';
+
+    protected $fillable = [
+        'foe_name',
+        'foe_type',
+        'foe_size',
+        'foe_description',
+        'foe_icon',
+        'foe_image'
+    ];
+
     protected $guarded = [];
 
     /**
@@ -16,7 +29,6 @@ class Foe extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'foe_id';
 
     public function materials()
     {

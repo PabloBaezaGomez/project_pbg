@@ -36,3 +36,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/materials/add', [MaterialUserController::class, 'addMaterial']);
 });
+
+Route::middleware(['auth:sanctum', \App\Http\Middleware\AdminOnly::class])->group(function () {
+    // Your admin-only routes here
+    Route::post('/foes', [FoeController::class, 'store']);
+    Route::put('/foes/{foe}', [FoeController::class, 'update']);
+    Route::delete('/foes/{foe}', [FoeController::class, 'destroy']);
+});
