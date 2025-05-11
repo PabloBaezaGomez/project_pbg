@@ -9,6 +9,7 @@ class Equipment extends Model
 {
     use HasFactory;
 
+    public $timestamps = true; // Enable timestamps
     protected $guarded = [];
 
     /**
@@ -18,6 +19,14 @@ class Equipment extends Model
      */
     protected $primaryKey = 'equipment_id';
 
+    protected $fillable = [
+        'equipment_name',
+        'equipment_type',
+        'equipment_description',
+        'equipment_image',
+        'equipment_stat'  // Added equipment_stat
+    ];
+
     public function users()
     {
         return $this->belongsToMany(User::class, 'equipment_user', 'equipment_id', 'user_id');
@@ -26,7 +35,7 @@ class Equipment extends Model
     public function materials()
     {
         return $this->belongsToMany(Material::class, 'material_equipment', 'equipment_id', 'material_id')
-                    ->withPivot('required_quantity');
+            ->withPivot('required_quantity');
     }
 
     public function type()

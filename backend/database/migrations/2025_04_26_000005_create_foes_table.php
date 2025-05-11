@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->text('foe_description')->nullable();
             $table->string('foe_icon')->nullable();
             $table->string('foe_image')->nullable();
+            $table->timestamps(); // Added timestamps
         });
     }
 

@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Foe extends Model
 {
     use HasFactory;
-
-    public $timestamps = false;
+    
+    public $timestamps = true; // Enable timestamps instead of false
     
     protected $primaryKey = 'foe_id';
 

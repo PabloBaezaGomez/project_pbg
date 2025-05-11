@@ -39,4 +39,39 @@ class AuthController extends Controller
             'message' => 'Logged out successfully'
         ]);
     }
+
+    public function register(Request $request)
+    {
+        $validated = $request->validate([
+            'user_name' => 'required|string|max:255|unique:users',
+            'user_email' => 'required|string|email|max:255|unique:users',
+            'user_password' => 'required|string|min:8',
+        ]);
+
+        try {
+            $user = User::create([
+                'user_name' => $validated['user_name'],
+                'user_email' => $validated['user_email'],
+                'user_password' => Hash::make($validated['user_password']),
+                'user_type' => 'user', // Default user type
+            ]);
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'success' => true,
+                'message' => 'User registered successfully',
+                'data' => [
+                    'user' => $user,
+                    'token' => $token
+                ]
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error registering user',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

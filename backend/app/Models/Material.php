@@ -2,20 +2,25 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Material extends Model
 {
     use HasFactory;
 
+    public $timestamps = true;
+
+    protected $fillable = [
+        'material_name',
+        'material_description',
+        'material_rarity',
+        'material_type',
+        'created_at',
+        'updated_at'
+    ];
+
     protected $guarded = [];
 
-    /**
-     * The primary key for the model.
-     *
-     * @var string
-     */
     protected $primaryKey = 'material_id';
 
     public function users()
@@ -33,7 +38,8 @@ class Material extends Model
     public function foes()
     {
         return $this->belongsToMany(Foe::class, 'material_foe', 'material_id', 'foe_id')
-            ->withPivot('drop_rate');
+            ->withPivot('drop_rate')
+            ->withTimestamps();
     }
 
     public function equipment()

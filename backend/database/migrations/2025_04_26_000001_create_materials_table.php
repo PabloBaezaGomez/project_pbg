@@ -13,6 +13,7 @@ return new class extends Migration {
             $table->string('material_rarity');
             $table->text('material_description')->nullable();
             $table->foreignId('material_type')->constrained('material_types', 'material_type_id')->onDelete('cascade');
+            $table->timestamps(); // Added timestamps
         });
     }
 

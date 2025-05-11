@@ -12,6 +12,8 @@ use App\Http\Controllers\MaterialUserController;
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
+Route::post('/register', [AuthController::class, 'register']);
+
 Route::get('/foes', [FoeController::class, 'index']);
 Route::get('/equipment', [EquipmentController::class, 'index']);
 Route::get('/materials', [MaterialController::class, 'index']);
@@ -42,4 +44,6 @@ Route::middleware(['auth:sanctum', \App\Http\Middleware\AdminOnly::class])->grou
     Route::post('/foes', [FoeController::class, 'store']);
     Route::put('/foes/{foe}', [FoeController::class, 'update']);
     Route::delete('/foes/{foe}', [FoeController::class, 'destroy']);
+    Route::post('/equipment', [EquipmentController::class, 'store']);
+    Route::post('/materials', [MaterialController::class, 'store']); // Added materials creation route
 });

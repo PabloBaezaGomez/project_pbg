@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->foreignId('equipment_id')->constrained('equipment', 'equipment_id')->onDelete('cascade');
             $table->integer('required_quantity');
             $table->primary(['material_id', 'equipment_id']);
+            $table->timestamps(); // Added timestamps
         });
     }
 

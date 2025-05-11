@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class FoeType extends Model
 {
     use HasFactory;
-
+    
+    public $timestamps = true; // Enable timestamps
+    
     protected $guarded = [];
 
     /**
