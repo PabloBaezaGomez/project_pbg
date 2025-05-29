@@ -13,6 +13,18 @@ class UserController extends Controller
         return response()->json(Material::all());
     }
 
+    public function show(Request $request)
+    {
+        $user = $request->user();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'user_name' => $user->user_name,
+                'role' => $user->user_type
+            ]
+        ]);
+    }
+
     /**
      * Get materials for authenticated user
      */

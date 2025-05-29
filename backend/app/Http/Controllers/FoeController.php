@@ -9,7 +9,19 @@ class FoeController extends Controller
 {
     public function index()
     {
-        return response()->json(Foe::all());
+        $foes = Foe::with('type')->get();
+        return response()->json(['data' => $foes]);
+    }
+
+    public function show($id)
+    {
+        $foe = Foe::with(['type', 'materials.type'])->findOrFail($id);
+        return response()->json([
+            'data' => [
+                'foe' => $foe,
+                'materials' => $foe->materials
+            ]
+        ]);
     }
 
     public function getMaterials(Foe $foe)
@@ -17,17 +29,6 @@ class FoeController extends Controller
         return response()->json([
             'success' => true,
             'data' => $foe->materials()->with('type')->get()
-        ]);
-    }
-
-    public function show(Foe $foe)
-    {
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'foe' => $foe->load('type'),
-                'materials' => $foe->materials()->with('type')->get()
-            ]
         ]);
     }
 

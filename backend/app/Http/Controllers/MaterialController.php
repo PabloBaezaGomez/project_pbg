@@ -60,6 +60,15 @@ class MaterialController extends Controller
                             ],
                             'required_quantity' => $equipment->pivot->required_quantity
                         ];
+                    }),
+                    'foes' => $material->foes()->with('type')->get()->map(function ($foe) {
+                        return [
+                            'id' => $foe->foe_id,
+                            'name' => $foe->foe_name,
+                            'icon' => $foe->foe_icon,
+
+                            'drop_rate' => $foe->pivot->drop_rate
+                        ];
                     })
                 ]
             ]
@@ -103,7 +112,6 @@ class MaterialController extends Controller
                 'message' => 'Material created successfully',
                 'material' => $material
             ], 201);
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error creating material',
