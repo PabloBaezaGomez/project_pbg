@@ -14,14 +14,19 @@
     <div class="materials-section">
       <h3>Droppable Materials</h3>
       <div class="materials-list">
-        <div v-for="material in monster.materials" :key="material.material_id" class="material-item">
+        <router-link
+          v-for="material in monster.materials"
+          :key="material.material_id"
+          :to="`/material/${material.material_id}`"
+          class="material-item"
+        >
           <img :src="material.type.material_type_icon" :alt="material.material_name">
           <div class="material-info">
             <span class="material-name">{{ material.material_name }}</span>
             <span class="material-rarity">Rarity: {{ material.material_rarity }}</span>
           </div>
           <span class="drop-rate">Drop Rate: {{ material.pivot.drop_rate }}%</span>
-        </div>
+        </router-link>
       </div>
     </div>
   </div>
@@ -104,6 +109,14 @@ export default {
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
+  text-decoration: none; /* Add this */
+  color: inherit; /* Add this */
+  transition: transform 0.2s, box-shadow 0.2s; /* Add this */
+}
+
+.material-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .material-item img {

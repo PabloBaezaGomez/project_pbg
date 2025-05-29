@@ -12,11 +12,16 @@
     <div class="materials-section">
       <h3>Required Materials</h3>
       <div class="materials-list">
-        <div v-for="material in equipment.materials" :key="material.id" class="material-item">
+        <router-link
+          v-for="material in equipment.materials"
+          :key="material.id"
+          :to="`/material/${material.id}`"
+          class="material-item"
+        >
           <img :src="material.type.icon" :alt="material.name">
           <span>{{ material.name }}</span>
           <span class="quantity">x{{ material.required_quantity }}</span>
-        </div>
+        </router-link>
       </div>
     </div>
 
@@ -146,6 +151,14 @@ export default {
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
+  text-decoration: none; /* Add this */
+  color: inherit; /* Add this */
+  transition: transform 0.2s, box-shadow 0.2s; /* Add this */
+}
+
+.material-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .material-item img {

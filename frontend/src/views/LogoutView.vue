@@ -19,10 +19,10 @@ export default {
       try {
         await authService.logout()
         authStore.logout()  // Changed from clearAuth to logout
-        router.push('/login')
+        router.push('/monsters')
       } catch (error) {
         console.error('Error during logout:', error)
-        router.push('/login')
+        router.push('/monsters')
       }
     })
   }

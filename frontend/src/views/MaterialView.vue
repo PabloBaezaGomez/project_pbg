@@ -10,6 +10,44 @@
       <p class="description">{{ material.material_description }}</p>
     </div>
 
+    <!-- Add Monsters Section -->
+    <div class="monsters-section">
+      <h3>Dropped by Monsters</h3>
+      <div class="monsters-list">
+        <router-link
+          v-for="foe in material.foes"
+          :key="foe.id"
+          :to="`/monster/${foe.id}`"
+          class="monster-item"
+        >
+          <img :src="foe.foe_icon" :alt="foe.foe_name" class="monster-icon" />
+          <div class="monster-info">
+            <span class="monster-name">{{ foe.name }}</span>
+            <span class="drop-rate">Drop Rate: {{ foe.drop_rate }}%</span>
+          </div>
+        </router-link>
+      </div>
+    </div>
+
+    <!-- Add Equipment Section -->
+    <div class="equipment-section">
+      <h3>Used in Equipment</h3>
+      <div class="equipment-list">
+        <router-link
+          v-for="equip in material.equipment"
+          :key="equip.id"
+          :to="`/equipment/${equip.id}`"
+          class="equipment-item"
+        >
+          <img :src="equip.type.icon" :alt="equip.name" class="equipment-icon" />
+          <div class="equipment-info">
+            <span class="equipment-name">{{ equip.name }}</span>
+            <span class="required-quantity">Required: {{ equip.required_quantity }}</span>
+          </div>
+        </router-link>
+      </div>
+    </div>
+
     <div v-if="authStore.token" class="user-material-section">
       <h3>Your Inventory</h3>
       <div class="quantity-control">
@@ -56,6 +94,8 @@ export default {
             name: response.data.data.material.type.name,
             icon: response.data.data.material.type.icon,
           },
+          foes: response.data.data.material.foes,
+          equipment: response.data.data.material.equipment
         }
       } catch (error) {
         console.error('Error fetching material:', error)
@@ -225,4 +265,64 @@ export default {
 }
 
 /* Keep existing styles and add any additional ones needed */
+.monsters-section,
+.equipment-section {
+  margin-top: 30px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.monsters-list,
+.equipment-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.monster-item,
+.equipment-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.monster-item:hover,
+.equipment-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.monster-icon,
+.equipment-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: 12px;
+}
+
+.monster-info,
+.equipment-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.monster-name,
+.equipment-name {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.drop-rate,
+.required-quantity {
+  font-size: 0.9em;
+  color: #666;
+}
 </style>

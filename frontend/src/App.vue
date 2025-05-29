@@ -30,6 +30,9 @@ onMounted(async () => {
         <RouterLink to="/monsters">Monsters</RouterLink>
         <RouterLink to="/equipments">Equipments</RouterLink>
         <RouterLink to="/materials">Materials</RouterLink>
+        <template v-if="authStore.user">
+          <RouterLink to="/UserEquipments">My Equipment</RouterLink>
+        </template>
         <template v-if="authStore.user && authStore.user.isAdmin">
           <RouterLink to="/new-equipment">New Equipment</RouterLink>
           <RouterLink to="/new-monster">New Monster</RouterLink>
