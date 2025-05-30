@@ -13,7 +13,7 @@ export const useAuthStore = defineStore('auth', {
             if (token) {
                 try {
                     const response = await authService.getCurrentUser()
-                    this.user = response.data.data
+                    this.user = response.data
                     this.token = token
                 } catch (error) {
                     this.logout()

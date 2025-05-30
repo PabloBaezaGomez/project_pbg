@@ -45,6 +45,8 @@ export const foeService = {
   getAll: () => api.get('/foes'),
   getOne: (id) => api.get(`/foes/${id}`),
   getMaterials: (id) => api.get(`/foes/${id}/materials`),
+  getTypes: () => api.get('/foe-types'),
+  create: (foeData) => api.post('/foes', foeData)
 }
 
 export default api

@@ -39,6 +39,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/materials/add', [MaterialUserController::class, 'addMaterial']);
 });
 
+Route::get('/foe-types', [FoeController::class, 'getTypes']);
+
 Route::middleware(['auth:sanctum', \App\Http\Middleware\AdminOnly::class])->group(function () {
     // Your admin-only routes here
     Route::post('/foes', [FoeController::class, 'store']);
