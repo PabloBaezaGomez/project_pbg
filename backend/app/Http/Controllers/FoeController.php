@@ -7,6 +7,8 @@ use App\Models\FoeType;
 use App\Models\Material;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class FoeController extends Controller
 {
@@ -48,8 +50,8 @@ class FoeController extends Controller
             'foe_type' => 'required|exists:foe_types,foe_type_id',
             'foe_size' => 'required|in:big,small',
             'foe_description' => 'required|string',
-            'foe_icon' => 'required|string',
-            'foe_image' => 'required|string',
+            'foe_icon' => 'required|file|max:20500',
+            'foe_image' => 'required|file|max:20500',
             'materials' => 'array',
             'materials.*.material_id' => 'required|exists:materials,material_id',
             'materials.*.drop_rate' => 'required|numeric|min:0|max:100'
@@ -57,14 +59,30 @@ class FoeController extends Controller
 
         try {
             DB::beginTransaction();
-            
+
+            // Handle file uploads
+            $iconPath = null;
+            $imagePath = null;
+
+            if ($request->hasFile('foe_icon')) {
+                $iconFile = $request->file('foe_icon');
+                $iconName = 'icon_' . Str::uuid() . '.' . $iconFile->getClientOriginalExtension();
+                $iconPath = $iconFile->storeAs('monster_icon', $iconName, 'public');
+            }
+
+            if ($request->hasFile('foe_image')) {
+                $imageFile = $request->file('foe_image');
+                $imageName = 'image_' . Str::uuid() . '.' . $imageFile->getClientOriginalExtension();
+                $imagePath = $imageFile->storeAs('monster_image', $imageName, 'public');
+            }
+
             $foe = Foe::create([
                 'foe_name' => $validated['foe_name'],
                 'foe_type' => $validated['foe_type'],
                 'foe_size' => $validated['foe_size'],
                 'foe_description' => $validated['foe_description'],
-                'foe_icon' => $validated['foe_icon'],
-                'foe_image' => $validated['foe_image']
+                'foe_icon' => $iconPath ? '/storage/' . $iconPath : null,
+                'foe_image' => $imagePath ? '/storage/' . $imagePath : null
             ]);
 
             // Attach materials with drop rates
@@ -85,6 +103,15 @@ class FoeController extends Controller
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
+
+            // Clean up uploaded files if monster creation fails
+            if ($iconPath && Storage::disk('public')->exists($iconPath)) {
+                Storage::disk('public')->delete($iconPath);
+            }
+            if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+                Storage::disk('public')->delete($imagePath);
+            }
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error creating monster',

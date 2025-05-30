@@ -1,7 +1,7 @@
 <template>
   <div class="new-monster-container">
     <h2>Create New Monster</h2>
-    <form @submit.prevent="createMonster" class="monster-form">
+    <form @submit.prevent="createMonster" class="monster-form" enctype="multipart/form-data">
       <div class="form-group">
         <label for="foe_name">Monster Name:</label>
         <input
@@ -47,25 +47,33 @@
       </div>
 
       <div class="form-group">
-        <label for="foe_icon">Monster Icon URL:</label>
+        <label for="foe_icon">Monster Icon:</label>
         <input
-          type="text"
+          type="file"
           id="foe_icon"
-          v-model="monsterData.foe_icon"
+          @change="handleIconUpload"
+          accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"
           required
-          class="form-input"
+          class="form-input file-input"
         />
+        <div v-if="iconPreview" class="image-preview">
+          <img :src="iconPreview" alt="Icon preview" class="preview-image" />
+        </div>
       </div>
 
       <div class="form-group">
-        <label for="foe_image">Monster Image URL:</label>
+        <label for="foe_image">Monster Image:</label>
         <input
-          type="text"
+          type="file"
           id="foe_image"
-          v-model="monsterData.foe_image"
+          @change="handleImageUpload"
+          accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"
           required
-          class="form-input"
+          class="form-input file-input"
         />
+        <div v-if="imagePreview" class="image-preview">
+          <img :src="imagePreview" alt="Image preview" class="preview-image" />
+        </div>
       </div>
 
       <div class="form-group">
@@ -150,14 +158,133 @@ export default {
       foe_name: '',
       foe_type: '',
       foe_size: '',
-      foe_description: '',
-      foe_icon: '',
-      foe_image: ''
+      foe_description: ''
     })
+    
+    const iconFile = ref(null)
+    const imageFile = ref(null)
+    const iconPreview = ref(null)
+    const imagePreview = ref(null)
     
     const foeTypes = ref([])
     const materials = ref([])
     const materialDrops = ref([{ material_id: '', drop_rate: '' }])
+
+    const validateFileType = (file) => {
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml']
+      return allowedTypes.includes(file.type)
+    }
+
+    const handleIconUpload = (event) => {
+      const file = event.target.files[0]
+      if (file) {
+        if (!validateFileType(file)) {
+          alert('Icon must be a JPEG, PNG, JPG, GIF, or SVG file')
+          event.target.value = '' // Clear the file input
+          iconFile.value = null
+          iconPreview.value = null
+          return
+        }
+        iconFile.value = file
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          iconPreview.value = e.target.result
+        }
+        reader.readAsDataURL(file)
+      }
+    }
+
+    const handleImageUpload = (event) => {
+      const file = event.target.files[0]
+      if (file) {
+        if (!validateFileType(file)) {
+          alert('Image must be a JPEG, PNG, JPG, GIF, or SVG file')
+          event.target.value = '' // Clear the file input
+          imageFile.value = null
+          imagePreview.value = null
+          return
+        }
+        imageFile.value = file
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          imagePreview.value = e.target.result
+        }
+        reader.readAsDataURL(file)
+      }
+    }
+
+    const createMonster = async () => {
+      if (isSubmitting.value) return
+      isSubmitting.value = true
+      
+      try {
+        // Validate required fields before sending
+        if (!monsterData.value.foe_name || !monsterData.value.foe_type || 
+            !monsterData.value.foe_size || !monsterData.value.foe_description) {
+          throw new Error('Please fill in all required fields')
+        }
+        
+        if (!iconFile.value || !imageFile.value) {
+          throw new Error('Both icon and image files are required')
+        }
+        
+        // Log FormData contents for debugging
+        console.log('Form data being sent:')
+        console.log('foe_name:', monsterData.value.foe_name)
+        console.log('foe_type:', monsterData.value.foe_type)
+        console.log('foe_size:', monsterData.value.foe_size)
+        console.log('foe_description:', monsterData.value.foe_description)
+        console.log('iconFile:', iconFile.value)
+        console.log('imageFile:', imageFile.value)
+        
+        const filteredMaterials = materialDrops.value.filter(
+          material => material.material_id && material.drop_rate
+        )
+        
+        const formData = new FormData()
+        formData.append('foe_name', monsterData.value.foe_name)
+        formData.append('foe_type', monsterData.value.foe_type)
+        formData.append('foe_size', monsterData.value.foe_size)
+        formData.append('foe_description', monsterData.value.foe_description)
+        formData.append('foe_icon', iconFile.value)
+        formData.append('foe_image', imageFile.value)
+        
+        // Add materials data
+        if (filteredMaterials.length > 0) {
+          filteredMaterials.forEach((material, index) => {
+            formData.append(`materials[${index}][material_id]`, material.material_id)
+            formData.append(`materials[${index}][drop_rate]`, material.drop_rate)
+          })
+        }
+
+        const response = await foeService.create(formData)
+        if (response.data.success) {
+          router.push('/monsters')
+        }
+      } catch (error) {
+        console.error('Error creating monster:', error)
+        let errorMessage = 'Error creating monster.'
+        
+        // Better error message handling
+        if (error.response?.status === 422) {
+          console.log('Validation errors:', error.response.data)
+          if (error.response.data.errors) {
+            const errors = Object.entries(error.response.data.errors)
+              .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
+              .join('\n')
+            errorMessage += '\n\nValidation errors:\n' + errors
+          } else if (error.response.data.message) {
+            errorMessage += '\n' + error.response.data.message
+          }
+        } else if (error.message) {
+          errorMessage += '\n' + error.message
+        }
+        
+        alert(errorMessage)
+      } finally {
+        isSubmitting.value = false
+      }
+    }
 
     const fetchFoeTypes = async () => {
       try {
@@ -188,28 +315,6 @@ export default {
       materialDrops.value.splice(index, 1)
     }
 
-    const createMonster = async () => {
-      isSubmitting.value = true
-      try {
-        const filteredMaterials = materialDrops.value.filter(
-          material => material.material_id && material.drop_rate
-        )
-        
-        const payload = {
-          ...monsterData.value,
-          materials: filteredMaterials
-        }
-        
-        await foeService.create(payload)
-        router.push('/monsters')
-      } catch (error) {
-        console.error('Error creating monster:', error)
-        alert('Error creating monster. Please try again.')
-      } finally {
-        isSubmitting.value = false
-      }
-    }
-
     onMounted(() => {
       fetchFoeTypes()
       fetchMaterials()
@@ -221,9 +326,13 @@ export default {
       materials,
       materialDrops,
       isSubmitting,
+      iconPreview,
+      imagePreview,
       createMonster,
       checkAddNewMaterial,
-      removeMaterial
+      removeMaterial,
+      handleIconUpload,
+      handleImageUpload
     }
   }
 }
@@ -264,8 +373,23 @@ export default {
   font-size: 16px;
 }
 
+.file-input {
+  padding: 5px;
+}
+
 .form-textarea {
   resize: vertical;
+}
+
+.image-preview {
+  margin-top: 10px;
+}
+
+.preview-image {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
 }
 
 .materials-section {

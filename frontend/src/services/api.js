@@ -3,17 +3,23 @@ import axios from 'axios'
 const api = axios.create({
   baseURL: 'http://localhost:8000/api',
   headers: {
-    'Content-Type': 'application/json',
     Accept: 'application/json',
   },
 })
 
-// Add request interceptor to include auth token
+// Add request interceptor to include auth token and handle content type
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token')
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
+  
+  // Only set Content-Type to application/json if it's not already defined
+  // This prevents overriding 'multipart/form-data' for file uploads
+  if (!config.headers['Content-Type'] && !config.headers['content-type']) {
+    config.headers['Content-Type'] = 'application/json'
+  }
+  
   return config
 })
 
@@ -21,7 +27,7 @@ export const authService = {
   login: (credentials) => api.post('/login', credentials),
   register: (userData) => api.post('/register', userData),
   logout: () => api.post('/logout'),
-  getCurrentUser: () => api.get('/user')
+  getCurrentUser: () => api.get('/user'),
 }
 
 export const equipmentService = {
@@ -46,7 +52,14 @@ export const foeService = {
   getOne: (id) => api.get(`/foes/${id}`),
   getMaterials: (id) => api.get(`/foes/${id}/materials`),
   getTypes: () => api.get('/foe-types'),
-  create: (foeData) => api.post('/foes', foeData)
+  async create(formData) {
+    const response = await api.post('/foes', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    return response
+  }
 }
 
 export default api
