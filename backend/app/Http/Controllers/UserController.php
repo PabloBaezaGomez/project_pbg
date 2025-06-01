@@ -20,7 +20,7 @@ class UserController extends Controller
             'success' => true,
             'data' => [
                 'user_name' => $user->user_name,
-                'role' => $user->user_type
+                'user_type' => $user->user_type
             ]
         ]);
     }

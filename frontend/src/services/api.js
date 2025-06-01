@@ -13,13 +13,13 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
-  
+
   // Only set Content-Type to application/json if it's not already defined
   // This prevents overriding 'multipart/form-data' for file uploads
   if (!config.headers['Content-Type'] && !config.headers['content-type']) {
     config.headers['Content-Type'] = 'application/json'
   }
-  
+
   return config
 })
 
@@ -35,6 +35,15 @@ export const equipmentService = {
   getUserEquipment: () => api.get('/user/equipment'),
   getOne: (id) => api.get(`/equipment/${id}`),
   craft: (equipmentId) => api.post('/equipment/craft', { equipment_id: equipmentId }),
+  getTypes: () => api.get('/equipment-types'),
+  async create(formData) {
+    const response = await api.post('/equipment', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    return response
+  },
 }
 
 export const materialService = {
@@ -45,6 +54,8 @@ export const materialService = {
     api.post('/materials/add', {
       materials: materials.map((m) => ({ material_id: m.material_id, amount: m.quantity })),
     }),
+  getMaterialTypes: () => api.get('/material-types'),
+  create: (materialData) => api.post('/materials', materialData),
 }
 
 export const foeService = {
@@ -59,7 +70,7 @@ export const foeService = {
       },
     })
     return response
-  }
+  },
 }
 
 export default api

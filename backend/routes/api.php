@@ -40,6 +40,8 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::get('/foe-types', [FoeController::class, 'getTypes']);
+Route::get('/material-types', [MaterialController::class, 'getTypes']);
+Route::get('/equipment-types', [EquipmentController::class, 'getTypes']);
 
 Route::middleware(['auth:sanctum', \App\Http\Middleware\AdminOnly::class])->group(function () {
     // Your admin-only routes here

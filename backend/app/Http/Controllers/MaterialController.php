@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Material;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\MaterialType;
 
 class MaterialController extends Controller
 {
@@ -80,7 +81,7 @@ class MaterialController extends Controller
         $validatedData = $request->validate([
             'material_name' => 'required|string|max:255|unique:materials,material_name',
             'material_description' => 'required|string',
-            'material_rarity' => 'required|integer|min:1|max:5',
+            'material_rarity' => 'required|integer|min:1|max:9',
             'material_type' => 'required|exists:material_types,material_type_id',
             'foes' => 'array',
             'foes.*.foe_id' => 'required|exists:foes,foe_id',
@@ -118,5 +119,21 @@ class MaterialController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function getTypes()
+    {
+        $types = MaterialType::all()->map(function ($type) {
+            return [
+                'material_type_id' => $type->material_type_id,
+                'material_type_name' => $type->material_type_name,
+                'material_type_icon' => $type->material_type_icon
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => $types
+        ]);
     }
 }

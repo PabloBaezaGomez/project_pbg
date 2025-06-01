@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\MaterialUser;
+use App\Models\EquipmentType;
+use Illuminate\Support\Facades\Log;
 
 class EquipmentController extends Controller
 {
@@ -165,33 +167,48 @@ class EquipmentController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'equipment_name' => 'required|string|max:255|unique:equipment',
-            'equipment_type' => 'required|exists:equipment_types,equipment_type_id',
-            'equipment_description' => 'required|string',
-            'equipment_image' => 'required|string',
-            'equipment_stat' => 'required|integer',
-            'materials' => 'required|array|min:1',
+        $request->validate([
+            'equipment_name' => 'required|string|max:255',  // Changed from 'name'
+            'equipment_description' => 'nullable|string',   // Changed from 'description'
+            'equipment_type' => 'required|exists:equipment_types,equipment_type_id',  // Fixed reference
+            'equipment_image' => 'nullable|file',
+            'materials' => 'array',
             'materials.*.material_id' => 'required|exists:materials,material_id',
-            'materials.*.quantity' => 'required|integer|min:1'
+            'materials.*.quantity' => 'required|integer|min:1',
         ]);
 
         try {
+            // Handle image upload
+            $imagePath = null;
+            if ($request->hasFile('equipment_image')) {
+                $image = $request->file('equipment_image');
+                Log::info('Backend: Received image file.', [
+                    'originalName' => $image->getClientOriginalName(),
+                    'mimeType' => $image->getMimeType(),
+                    'size' => $image->getSize(),
+                    'extension' => $image->getClientOriginalExtension()
+                ]);
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $imagePath = $image->storeAs('equipment_images', $imageName, 'public');
+            }
+
             $equipment = Equipment::create([
-                'equipment_name' => $validated['equipment_name'],
-                'equipment_type' => $validated['equipment_type'],
-                'equipment_description' => $validated['equipment_description'],
-                'equipment_image' => $validated['equipment_image'],
-                'equipment_stat' => $validated['equipment_stat']
+                'equipment_name' => $request->input('equipment_name'),
+                'equipment_type' => $request->input('equipment_type'), 
+                'equipment_description' => $request->input('equipment_description'),
+                'equipment_image' => $imagePath,
+                'equipment_stat' => $request->input('equipment_stat')
             ]);
 
-            // Attach materials with their quantities, using required_quantity instead of quantity
-            foreach ($validated['materials'] as $material) {
-                $equipment->materials()->attach($material['material_id'], [
-                    'required_quantity' => $material['quantity'],
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
+            // Attach materials if provided
+            if (isset($validated['materials'])) {
+                foreach (['materials'] as $material) {
+                    $equipment->materials()->attach($material['material_id'], [
+                        'required_quantity' => $material['quantity'],
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
             }
 
             return response()->json([
@@ -209,5 +226,14 @@ class EquipmentController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function getTypes()
+    {
+        $types = EquipmentType::all();
+        return response()->json([
+            'success' => true,
+            'data' => $types
+        ]);
     }
 }

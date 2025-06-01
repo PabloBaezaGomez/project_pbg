@@ -90,7 +90,7 @@ const routes = [
   },
   {
     path: '/newEquipment',
-    name: 'NewEquipment',
+    name: 'newEquipment',
     component: () => import('../views/NewEquipmentView.vue'),
     meta: { requiresAuth: true, requiresAdmin: true }
   },
@@ -113,9 +113,31 @@ const router = createRouter({
   routes
 })
 
+// Add this import at the top of the file
+import { watch } from 'vue'
+
 // Navigation guard
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
+
+  // Wait until auth loading is finished
+  if (authStore.isAuthLoading) {
+    // Create a promise that resolves when isAuthLoading becomes false
+    await new Promise(resolve => {
+      const unwatch = watch(
+        () => authStore.isAuthLoading,
+        (newVal) => {
+          if (!newVal) {
+            unwatch()
+            resolve()
+          }
+        },
+        { immediate: true } // Check immediately in case it's already false
+      )
+    })
+  }
+
+  // Now proceed with navigation after auth is loaded
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
 
