@@ -10,10 +10,16 @@ class MaterialTypesTableSeeder extends Seeder
     public function run()
     {
         DB::table('material_types')->insert([
-            ['material_type_name' => 'Metal', 'material_type_icon'=>'path'],
-['material_type_name' => 'Wood', 'material_type_icon'=>'path'],
-['material_type_name' => 'Stone', 'material_type_icon'=>'path'],
-['material_type_name' => 'Fabric', 'material_type_icon'=>'path']
+            ['material_type_name' => 'Bone',        'material_type_icon' => 'material_type/bone.png'],
+            ['material_type_name' => 'Scale',       'material_type_icon' => 'material_type/scale.png'],
+            ['material_type_name' => 'Claw',        'material_type_icon' => 'material_type/claw.png'],
+            ['material_type_name' => 'Hide',        'material_type_icon' => 'material_type/hide.png'],
+            ['material_type_name' => 'Shell',       'material_type_icon' => 'material_type/shell.png'],
+            ['material_type_name' => 'Ore',         'material_type_icon' => 'material_type/ore.png'],
+            ['material_type_name' => 'Monster Fluid','material_type_icon' => 'material_type/monster_fluid.png'],
+            ['material_type_name' => 'Tail',        'material_type_icon' => 'material_type/tail.png'],
+            ['material_type_name' => 'Webbing',     'material_type_icon' => 'material_type/webbing.png'],
+            ['material_type_name' => 'Gem',        'material_type_icon' => 'material_type/gem.png'],
         ]);
     }
 }

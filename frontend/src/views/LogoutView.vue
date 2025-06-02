@@ -17,15 +17,14 @@ export default {
 
     onMounted(async () => {
       try {
-        await authService.logout()
-        authStore.logout()  // Changed from clearAuth to logout
+        await authStore.logout()
         router.push('/monsters')
       } catch (error) {
         console.error('Error during logout:', error)
         router.push('/monsters')
       }
     })
-  }
+  },
 }
 </script>
 

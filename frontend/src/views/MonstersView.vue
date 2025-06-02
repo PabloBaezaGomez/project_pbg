@@ -7,7 +7,7 @@
         :to="`/monster/${monster.foe_id}`"
         class="monster-card"
       >
-        <img :src="monster.foe_icon" :alt="monster.foe_name">
+        <img :src=getMonsterIcon(monster.foe_icon) :alt="monster.foe_name">
         <h3>{{ monster.foe_name }}</h3>
         <p class="type-name">{{ monster.type.foe_type_name }}</p>
       </router-link>
@@ -26,16 +26,22 @@ export default {
     const fetchMonsters = async () => {
       try {
         const response = await foeService.getAll()
-        monsters.value = response.data.data // Updated to match the JSON structure
+        monsters.value = response.data.data
       } catch (error) {
         console.error('Error fetching monsters:', error)
       }
     }
 
+    // Función para construir la URL de la imagen
+    const getMonsterIcon = (iconPath) => {
+      return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_monster.png'
+    }
+
     onMounted(fetchMonsters)
 
     return {
-      monsters
+      monsters,
+      getMonsterIcon
     }
   }
 }

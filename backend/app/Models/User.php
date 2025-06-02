@@ -33,8 +33,8 @@ class User extends Authenticatable
     }
 
     public function materials()
-{
-    return $this->belongsToMany(Material::class, 'material_user', 'user_id', 'material_id')
-        ->withPivot('quantity');
-}
+    {
+        return $this->belongsToMany(Material::class, 'material_user', 'user_id', 'material_id')
+            ->withPivot('quantity');
+    }
 }

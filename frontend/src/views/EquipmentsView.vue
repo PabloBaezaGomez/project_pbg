@@ -7,7 +7,7 @@
         :to="`/equipment/${equipment.equipment_id}`"
         class="equipment-card"
       >
-        <img :src="equipment.type.icon" :alt="equipment.equipment_name">
+        <img :src="getEquipmentIcon(equipment.type.icon)" :alt="equipment.equipment_name">
         <h3>{{ equipment.equipment_name }}</h3>
         <p class="type-name">{{ equipment.type.name }}</p>
       </router-link>
@@ -32,10 +32,15 @@ export default {
       }
     }
 
+    const getEquipmentIcon = (iconPath) => {
+      return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_equipment.png'
+    }
+
     onMounted(fetchEquipments)
 
     return {
-      equipments
+      equipments,
+      getEquipmentIcon
     }
   }
 }

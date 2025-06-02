@@ -1,9 +1,15 @@
 <template>
   <div class="equipment-detail-container" v-if="equipment">
     <div class="equipment-info">
-      <img :src="equipment.equipment_image" :alt="equipment.equipment_name" class="equipment-image">
+      <img :src="getEquipmentIcon(equipment.equipment_image)" :alt="equipment.equipment_name" class="equipment-image">
       <h2>{{ equipment.equipment_name }}</h2>
       <div class="type-info">
+        <img
+          v-if="equipment.type && equipment.type.icon"
+          :src="getTypeIcon(equipment.type.icon)"
+          :alt="equipment.type.name"
+          class="type-icon"
+        />
         <span>{{ equipment.type.name }}</span>
       </div>
       <p class="description">{{ equipment.equipment_description }}</p>
@@ -18,7 +24,7 @@
           :to="`/material/${material.id}`"
           class="material-item"
         >
-          <img :src="material.type.icon" :alt="material.name">
+          <img :src="getMaterialTypeIcon(material.type.icon)" :alt="material.name">
           <span>{{ material.name }}</span>
           <span class="quantity">x{{ material.required_quantity }}</span>
         </router-link>
@@ -87,6 +93,18 @@ export default {
       }
     }
 
+    const getEquipmentIcon = (iconPath) => {
+      return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_equipment.png'
+    }
+
+    const getTypeIcon = (iconPath) => {
+      return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_equipment_type.png'
+    }
+
+    const getMaterialTypeIcon = (iconPath) => {
+      return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_material_type.png'
+    }
+
     onMounted(fetchEquipment)
 
     return {
@@ -94,7 +112,10 @@ export default {
       authStore,
       isCrafting,
       craftResult,
-      craftEquipment
+      craftEquipment,
+      getEquipmentIcon,
+      getTypeIcon,
+      getMaterialTypeIcon
     }
   }
 }

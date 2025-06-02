@@ -16,7 +16,7 @@
           :to="`/material/${material.material_id}`"
           class="material-link"
         >
-          <img :src="material.type.icon" :alt="material.material_name">
+          <img :src="getMaterialTypeIcon(material.type.icon)" :alt="material.material_name">
           <h3>{{ material.material_name }}</h3>
           <p class="material-type">{{ material.type.name }}</p>
           <p class="material-rarity">Rarity: {{ material.material_rarity }}</p>
@@ -68,7 +68,6 @@ export default {
 
       try {
         const response = await materialService.getUserMaterials()
-        // Fix the data structure access
         const materialsData = response.data.data || response.data
         userMaterials.value = materialsData.reduce((acc, material) => {
           acc[material.material_id] = material.pivot ? material.pivot.quantity : material.quantity
@@ -83,7 +82,7 @@ export default {
       if (!authStore.token) return
 
       const materialsToAdd = Object.entries(materialQuantities.value)
-        .filter(([quantity]) => quantity > 0)
+        .filter(([_, quantity]) => quantity > 0)
         .map(([materialId, quantity]) => ({
           material_id: parseInt(materialId),
           quantity: parseInt(quantity)
@@ -95,13 +94,16 @@ export default {
       try {
         await materialService.addMaterials(materialsToAdd)
         await fetchUserMaterials()
-        // Reset quantities after successful addition
         materialQuantities.value = {}
       } catch (error) {
         console.error('Error adding materials:', error)
       } finally {
         isAdding.value = false
       }
+    }
+
+    const getMaterialTypeIcon = (iconPath) => {
+      return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_material_type.png'
     }
 
     onMounted(() => {
@@ -117,7 +119,8 @@ export default {
       materialQuantities,
       isAdding,
       authStore,
-      addAllMaterials
+      addAllMaterials,
+      getMaterialTypeIcon
     }
   }
 }
@@ -185,12 +188,18 @@ export default {
   transition: transform 0.2s, box-shadow 0.2s;
   display: flex;
   flex-direction: column;
+  align-items: center; /* Centra el contenido horizontalmente */
+  justify-content: center; /* Centra el contenido verticalmente */
+  text-align: center; /* Centra el texto */
 }
 
 .material-link {
   text-decoration: none;
   color: inherit;
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra el contenido del link */
 }
 
 .material-card:hover {

@@ -1,7 +1,7 @@
 <template>
   <div class="material-detail-container" v-if="material">
     <div class="material-info">
-      <img :src="material.type.icon" :alt="material.material_name" class="material-image" />
+      <img :src="getMaterialTypeIcon(material.type.icon)" :alt="material.material_name" class="material-image" />
       <h2>{{ material.material_name }}</h2>
       <div class="type-info">
         <span>{{ material.type.name }}</span>
@@ -11,7 +11,7 @@
     </div>
 
     <!-- Add Monsters Section -->
-    <div class="monsters-section">
+    <div class="monsters-section" v-if="material.foes && material.foes.length > 0">
       <h3>Dropped by Monsters</h3>
       <div class="monsters-list">
         <router-link
@@ -20,7 +20,7 @@
           :to="`/monster/${foe.id}`"
           class="monster-item"
         >
-          <img :src="foe.foe_icon" :alt="foe.foe_name" class="monster-icon" />
+          <img :src="getMonsterIcon(foe.icon)" :alt="foe.foe_name" class="monster-icon" />
           <div class="monster-info">
             <span class="monster-name">{{ foe.name }}</span>
             <span class="drop-rate">Drop Rate: {{ foe.drop_rate }}%</span>
@@ -39,7 +39,7 @@
           :to="`/equipment/${equip.id}`"
           class="equipment-item"
         >
-          <img :src="equip.type.icon" :alt="equip.name" class="equipment-icon" />
+          <img :src="getEquipmentTypeIcon(equip.type.icon)" :alt="equip.name" class="equipment-icon" />
           <div class="equipment-info">
             <span class="equipment-name">{{ equip.name }}</span>
             <span class="required-quantity">Required: {{ equip.required_quantity }}</span>
@@ -109,7 +109,6 @@ export default {
         const userMaterial = response.data.data.find(
           (m) => m.material_id === parseInt(route.params.id),
         )
-        // Change this line to access quantity directly instead of through pivot
         userQuantity.value = userMaterial ? userMaterial.quantity : 0
       } catch (error) {
         console.error('Error fetching user material:', error)
@@ -136,6 +135,18 @@ export default {
       }
     }
 
+    const getMaterialTypeIcon = (iconPath) => {
+      return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_material_type.png'
+    }
+
+    const getMonsterIcon = (iconPath) => {
+      return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_monster.png'
+    }
+
+    const getEquipmentTypeIcon = (iconPath) => {
+      return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_equipment_type.png'
+    }
+
     onMounted(() => {
       fetchMaterial()
       if (authStore.token) {
@@ -150,6 +161,9 @@ export default {
       isAdding,
       authStore,
       addMaterial,
+      getMaterialTypeIcon,
+      getMonsterIcon,
+      getEquipmentTypeIcon
     }
   },
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="monster-detail-container" v-if="monster">
     <div class="monster-info">
-      <img :src="monster.foe.foe_image" :alt="monster.foe.foe_name" class="monster-image">
+      <img :src=getMonsterImage(monster.foe.foe_image) :alt="monster.foe.foe_name" class="monster-image">
       <h2>{{ monster.foe.foe_name }}</h2>
       <div class="monster-type">
         <span>Type: {{ monster.foe.type.foe_type_name }}</span>
@@ -54,7 +54,10 @@ export default {
     onMounted(fetchMonster)
 
     return {
-      monster
+      monster,
+      getMonsterImage: (imagePath) => {
+        return `http://localhost:8000/storage/${imagePath}`
+      }
     }
   }
 }
@@ -73,8 +76,8 @@ export default {
 }
 
 .monster-image {
-  width: 200px;
-  height: 200px;
+  width: 50%;
+  height: 50%;
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 15px;
