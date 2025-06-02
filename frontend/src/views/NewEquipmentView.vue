@@ -174,8 +174,6 @@ export default {
     }
 
     const createEquipment = async () => {
-      console.log('equipmentData:', equipmentData.value)
-      console.log('imageFile:', imageFile.value)
       if (isSubmitting.value) return
       isSubmitting.value = true
 
@@ -193,10 +191,6 @@ export default {
           material => material.material_id && material.quantity
         )
 
-        console.log('Image file:', imageFile.value);
-        console.log('Image file type:', imageFile.value?.type);
-        console.log('Image file size:', imageFile.value?.size);
-
         const formData = new FormData()
         formData.append('equipment_name', equipmentData.value.equipment_name)
         formData.append('equipment_type', equipmentData.value.equipment_type)
@@ -210,11 +204,12 @@ export default {
             formData.append(`materials[${index}][quantity]`, material.quantity)
           })
         }
+
         console.log('Form data:', formData)
 
         const response = await equipmentService.create(formData)
         if (response.data.success) {
-          router.push('/equipments')  // Change from '/equipment' to '/equipments'
+          router.push('/equipments')
         }
       } catch (error) {
         console.error('Error creating equipment:', error)
@@ -251,7 +246,8 @@ export default {
     const fetchMaterials = async () => {
       try {
         const response = await materialService.getAll()
-        materials.value = response.data
+        materials.value = response.data;
+        console.log('Materials:', materials.value);
       } catch (error) {
         console.error('Error fetching materials:', error)
       }

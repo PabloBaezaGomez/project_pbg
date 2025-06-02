@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Equipment;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use App\Models\MaterialUser;
 use App\Models\EquipmentType;
-use Illuminate\Support\Facades\Log;
+use App\Models\Material;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use App\Models\MaterialUser;
 
 class EquipmentController extends Controller
 {
@@ -167,49 +169,46 @@ class EquipmentController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'equipment_name' => 'required|string|max:255',  // Changed from 'name'
-            'equipment_description' => 'nullable|string',   // Changed from 'description'
-            'equipment_type' => 'required|exists:equipment_types,equipment_type_id',  // Fixed reference
-            'equipment_image' => 'nullable|file',
-            'materials' => 'array',
+        $validated = $request->validate([
+            'equipment_name' => 'required|string|max:255',
+            'equipment_type' => 'required|exists:equipment_types,equipment_type_id',
+            'equipment_description' => 'required|string',
+            'equipment_image' => 'required|file|max:20500',
+            'equipment_stat' => 'required|integer',
+            'materials' => 'required|array|min:1',
             'materials.*.material_id' => 'required|exists:materials,material_id',
-            'materials.*.quantity' => 'required|integer|min:1',
+            'materials.*.quantity' => 'required|integer|min:1'
         ]);
 
         try {
-            // Handle image upload
+            DB::beginTransaction();
+
+            // Handle file upload
             $imagePath = null;
             if ($request->hasFile('equipment_image')) {
-                $image = $request->file('equipment_image');
-                Log::info('Backend: Received image file.', [
-                    'originalName' => $image->getClientOriginalName(),
-                    'mimeType' => $image->getMimeType(),
-                    'size' => $image->getSize(),
-                    'extension' => $image->getClientOriginalExtension()
-                ]);
-                $imageName = time() . '_' . $image->getClientOriginalName();
-                $imagePath = $image->storeAs('equipment_images', $imageName, 'public');
+                $imageFile = $request->file('equipment_image');
+                $imageName = 'equipment_' . Str::uuid() . '.' . $imageFile->getClientOriginalExtension();
+                $imagePath = $imageFile->storeAs('equipment_images', $imageName, 'public');
             }
 
             $equipment = Equipment::create([
-                'equipment_name' => $request->input('equipment_name'),
-                'equipment_type' => $request->input('equipment_type'), 
-                'equipment_description' => $request->input('equipment_description'),
-                'equipment_image' => $imagePath,
-                'equipment_stat' => $request->input('equipment_stat')
+                'equipment_name' => $validated['equipment_name'],
+                'equipment_type' => $validated['equipment_type'],
+                'equipment_description' => $validated['equipment_description'],
+                'equipment_image' => $imagePath ? '/storage/' . $imagePath : null,
+                'equipment_stat' => $validated['equipment_stat']
             ]);
 
-            // Attach materials if provided
-            if (isset($validated['materials'])) {
-                foreach (['materials'] as $material) {
-                    $equipment->materials()->attach($material['material_id'], [
-                        'required_quantity' => $material['quantity'],
-                        'created_at' => now(),
-                        'updated_at' => now()
-                    ]);
-                }
+            // Attach materials with their quantities
+            foreach ($validated['materials'] as $material) {
+                $equipment->materials()->attach($material['material_id'], [
+                    'required_quantity' => $material['quantity'],
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
             }
+
+            DB::commit();
 
             return response()->json([
                 'success' => true,
@@ -220,6 +219,13 @@ class EquipmentController extends Controller
                 ]
             ], 201);
         } catch (\Exception $e) {
+            DB::rollBack();
+
+            // Clean up uploaded file if equipment creation fails
+            if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+                Storage::disk('public')->delete($imagePath);
+            }
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error creating equipment',
@@ -231,6 +237,7 @@ class EquipmentController extends Controller
     public function getTypes()
     {
         $types = EquipmentType::all();
+        
         return response()->json([
             'success' => true,
             'data' => $types
