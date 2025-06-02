@@ -77,18 +77,6 @@ const routes = [
     component: () => import('../views/MaterialView.vue')
   },
   {
-    path: '/craftEquipment',
-    name: 'CraftEquipment',
-    component: () => import('../views/CraftEquipmentView.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/addMaterial',
-    name: 'AddMaterial',
-    component: () => import('../views/AddMaterialView.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
     path: '/newEquipment',
     name: 'newEquipment',
     component: () => import('../views/NewEquipmentView.vue'),

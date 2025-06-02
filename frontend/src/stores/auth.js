@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { authService } from '@/services/api'
+import router from '@/router'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -10,21 +11,14 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     async initializeAuth() {
-      console.log('initializeAuth: Starting initialization.')
       this.isAuthLoading = true
       const token = localStorage.getItem('token')
-      console.log('initializeAuth: Token from localStorage:', token)
       if (token) {
         try {
           const response = await authService.getCurrentUser()
           // Extract user data from the nested structure
           this.user = response.data.data
           this.token = token
-          console.log(
-            'initializeAuth: getCurrentUser successful. User data:',
-            JSON.stringify(this.user, null, 2),
-          )
-          console.log('initializeAuth: Token set:', this.token)
         } catch (error) {
           console.error('initializeAuth: getCurrentUser failed:', error)
           this.logout()
@@ -32,7 +26,6 @@ export const useAuthStore = defineStore('auth', {
           this.isAuthLoading = false
         }
       } else {
-        console.log('initializeAuth: No token found in localStorage.')
         this.isAuthLoading = false
       }
     },
@@ -49,8 +42,6 @@ export const useAuthStore = defineStore('auth', {
         this.token = response.data.token
         this.user = response.data.user
         localStorage.setItem('token', this.token)
-        console.log('Login successful. Response data:', JSON.stringify(response.data, null, 2))
-        console.log('Auth store user after login:', JSON.stringify(this.user, null, 2))
         return response
       } finally {
         this.isAuthLoading = false // Set loading to false after login attempt
@@ -64,6 +55,7 @@ export const useAuthStore = defineStore('auth', {
       this.user = null
       localStorage.removeItem('token')
       localStorage.removeItem('user')
+      router.push('/monsters') // Redirect to monsters page after logout
     },
   },
 })

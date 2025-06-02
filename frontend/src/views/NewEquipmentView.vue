@@ -205,8 +205,6 @@ export default {
           })
         }
 
-        console.log('Form data:', formData)
-
         const response = await equipmentService.create(formData)
         if (response.data.success) {
           router.push('/equipments')
@@ -247,7 +245,6 @@ export default {
       try {
         const response = await materialService.getAll()
         materials.value = response.data;
-        console.log('Materials:', materials.value);
       } catch (error) {
         console.error('Error fetching materials:', error)
       }

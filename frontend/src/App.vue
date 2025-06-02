@@ -11,11 +11,6 @@ onMounted(async () => {
     await authStore.initializeAuth()
   } catch (error) {
     console.error('Auth initialization failed:', error)
-  } finally {
-    // isAuthLoading.value = false // Remove this line
-    console.log('App.vue: isAuthLoading is false. Current authStore.user:', authStore.user)
-    console.log('App.vue: authStore.user.data:', authStore.user ? authStore.user : 'user data is null') // Changed from authStore.user.data
-    console.log('App.vue: authStore.user.data.user_type:', authStore.user && authStore.user ? authStore.user.user_type : 'user_type is null or undefined') // Changed from authStore.user.data.user_type
   }
 })
 </script>
@@ -23,6 +18,9 @@ onMounted(async () => {
 <template>
   <div class="app-container">
     <header class="header">
+      <div class="title">
+        <h1>Monster Hunter PBG</h1>
+      </div>
       <div class="auth-buttons">
         <template v-if="authStore.user && !authStore.isAuthLoading">
           <span>Welcome, {{ authStore.user.user_name }}</span>
@@ -74,6 +72,16 @@ onMounted(async () => {
   background-color: var(--color-background-soft);
   padding: 1rem;
   border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center; /* Centra verticalmente los elementos del header */
+  justify-content: space-between; /* Espacia el título y los botones */
+}
+
+.title {
+  font-size: 1rem;
+  color: var(--color-text);
+  text-align: center;
+  flex: 1;
 }
 
 .username {

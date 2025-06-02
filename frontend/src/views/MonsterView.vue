@@ -20,7 +20,7 @@
           :to="`/material/${material.material_id}`"
           class="material-item"
         >
-          <img :src="material.type.material_type_icon" :alt="material.material_name">
+          <img :src=getMaterialTypeIcon(material.type.material_type_icon) :alt="material.material_name">
           <div class="material-info">
             <span class="material-name">{{ material.material_name }}</span>
             <span class="material-rarity">Rarity: {{ material.material_rarity }}</span>
@@ -57,6 +57,9 @@ export default {
       monster,
       getMonsterImage: (imagePath) => {
         return `http://localhost:8000/storage/${imagePath}`
+      },
+      getMaterialTypeIcon: (iconPath) => {
+        return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_material.png'
       }
     }
   }

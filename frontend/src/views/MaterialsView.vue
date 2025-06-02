@@ -7,16 +7,9 @@
     </div>
 
     <div class="materials-grid">
-      <div
-        v-for="material in materials"
-        :key="material.material_id"
-        class="material-card"
-      >
-        <router-link
-          :to="`/material/${material.material_id}`"
-          class="material-link"
-        >
-          <img :src="getMaterialTypeIcon(material.type.icon)" :alt="material.material_name">
+      <div v-for="material in materials" :key="material.material_id" class="material-card">
+        <router-link :to="`/material/${material.material_id}`" class="material-link">
+          <img :src="getMaterialTypeIcon(material.type.icon)" :alt="material.material_name" />
           <h3>{{ material.material_name }}</h3>
           <p class="material-type">{{ material.type.name }}</p>
           <p class="material-rarity">Rarity: {{ material.material_rarity }}</p>
@@ -33,7 +26,7 @@
               v-model="materialQuantities[material.material_id]"
               min="1"
               placeholder="Quantity"
-            >
+            />
           </div>
         </div>
       </div>
@@ -85,7 +78,7 @@ export default {
         .filter(([_, quantity]) => quantity > 0)
         .map(([materialId, quantity]) => ({
           material_id: parseInt(materialId),
-          quantity: parseInt(quantity)
+          quantity: parseInt(quantity),
         }))
 
       if (materialsToAdd.length === 0) return
@@ -103,7 +96,9 @@ export default {
     }
 
     const getMaterialTypeIcon = (iconPath) => {
-      return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_material_type.png'
+      return iconPath
+        ? `http://localhost:8000/storage/${iconPath}`
+        : '/img/default_material_type.png'
     }
 
     onMounted(() => {
@@ -120,9 +115,9 @@ export default {
       isAdding,
       authStore,
       addAllMaterials,
-      getMaterialTypeIcon
+      getMaterialTypeIcon,
     }
-  }
+  },
 }
 </script>
 
@@ -144,7 +139,7 @@ export default {
 .add-all-button {
   width: 100%;
   padding: 1rem;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 4px;
@@ -185,11 +180,13 @@ export default {
   border-radius: 8px;
   padding: 15px;
   background-color: white;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centra el contenido horizontalmente */
-  justify-content: center; /* Centra el contenido verticalmente */
+  align-items: center; /* Centra horizontalmente los elementos */
+  justify-content: center; /* Centra verticalmente los elementos */
   text-align: center; /* Centra el texto */
 }
 
@@ -203,8 +200,8 @@ export default {
 }
 
 .material-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .material-card img {
