@@ -291,10 +291,10 @@ export default {
 }
 
 .equipment-form {
-  background: white;
+  background: var(--formbackground);
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px var(--shadowcolor);
 }
 
 .form-group {
@@ -305,7 +305,7 @@ label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 600;
-  color: #333;
+  color: var(--accentcolor2);
 }
 
 .form-input,
@@ -313,7 +313,7 @@ label {
 .form-textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--inputbackground);
   border-radius: 4px;
   font-size: 1rem;
 }
@@ -322,8 +322,8 @@ label {
 .form-select:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  border-color: var(--button);
+  box-shadow: 0 0 0 2px var(--shadowcolor);
 }
 
 .file-input {
@@ -338,13 +338,13 @@ label {
   max-width: 200px;
   max-height: 200px;
   border-radius: 4px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--bordercard);
 }
 
 .materials-section {
   margin-top: 2rem;
   padding-top: 2rem;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--bordercolor);
 }
 
 .material-requirement {
@@ -353,7 +353,6 @@ label {
   align-items: end;
   margin-bottom: 1rem;
   padding: 1rem;
-  background: #f8f9fa;
   border-radius: 4px;
 }
 
@@ -363,8 +362,8 @@ label {
 }
 
 .remove-btn {
-  background: #dc3545;
-  color: white;
+  background: var(--removebutton);
+  color: var(--textbutton);
   border: none;
   padding: 0.75rem 1rem;
   border-radius: 4px;
@@ -373,7 +372,7 @@ label {
 }
 
 .remove-btn:hover {
-  background: #c82333;
+  background: var(--removebuttonhover);
 }
 
 .form-actions {
@@ -381,12 +380,11 @@ label {
   gap: 1rem;
   margin-top: 2rem;
   padding-top: 2rem;
-  border-top: 1px solid #eee;
 }
 
 .submit-btn {
-  background: #007bff;
-  color: white;
+  background: var(--button);
+  color: var(--textbutton);
   border: none;
   padding: 0.75rem 2rem;
   border-radius: 4px;
@@ -395,17 +393,17 @@ label {
 }
 
 .submit-btn:hover:not(:disabled) {
-  background: #0056b3;
+  background: var(--buttonhover);
 }
 
 .submit-btn:disabled {
-  background: #6c757d;
+  background: var(--buttondisabled);
   cursor: not-allowed;
 }
 
 .cancel-btn {
-  background: #6c757d;
-  color: white;
+  background: var(--removebutton);
+  color: var(--textbutton);
   text-decoration: none;
   padding: 0.75rem 2rem;
   border-radius: 4px;
@@ -413,16 +411,16 @@ label {
 }
 
 .cancel-btn:hover {
-  background: #545b62;
+  background: var(--removebuttonhover);
 }
 
 h2 {
-  color: #333;
+  color: var(--accentcolor2);
   margin-bottom: 2rem;
 }
 
 h3 {
-  color: #555;
+  color: var(--accentcolor3);
   margin-bottom: 1rem;
 }
 </style>

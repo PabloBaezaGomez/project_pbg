@@ -2,9 +2,9 @@
   <div class="equipments-container">
     <h2>Your Equipment</h2>
     <div class="equipments-grid">
-      <router-link 
-        v-for="equipment in equipments" 
-        :key="equipment.equipment_id" 
+      <router-link
+        v-for="equipment in equipments"
+        :key="equipment.equipment_id"
         :to="`/equipment/${equipment.equipment_id}`"
         class="equipment-card"
       >
@@ -56,7 +56,7 @@ export default {
   gap: 20px;
 }
 .equipment-card {
-  border: 1px solid #ddd;
+  border: 1px solid var(--backgroundcard);
   border-radius: 8px;
   padding: 15px;
   text-align: center;
@@ -70,7 +70,7 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 .type-name {
-  color: #888;
+  color: var(--accentcolor2);
   font-size: 0.9em;
 }
 </style>

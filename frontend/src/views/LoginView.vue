@@ -52,25 +52,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f6f8fa;
-}
-
-.login-form {
-  background: white;
-  padding: 2rem 2.5rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-  width: 100%;
-  max-width: 350px;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-}
-
-.login-form h2 {
-  margin-bottom: 0.5rem;
-  text-align: center;
-  color: #333;
+  background-color: var(--backgroundcard);
 }
 
 .form-group {
@@ -81,30 +63,30 @@ export default {
 
 label {
   font-size: 1em;
-  color: #555;
+  color: var(--labeltext);
 }
 
 input[type='email'],
 input[type='password'] {
   padding: 0.6rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--bordercard);
   border-radius: 5px;
   font-size: 1em;
-  background: #f9fafb;
+  background: var(--inputbackground);
   transition: border 0.2s;
 }
 
 input[type='email']:focus,
 input[type='password']:focus {
-  border-color: #4CAF50;
+  border-color: var(--button);
   outline: none;
 }
 
 button[type='submit'] {
   margin-top: 0.5rem;
   padding: 0.7rem;
-  background: #4CAF50;
-  color: white;
+  background: var(--button);
+  color: var(--textbutton);
   border: none;
   border-radius: 5px;
   font-size: 1.1em;
@@ -113,6 +95,6 @@ button[type='submit'] {
 }
 
 button[type='submit']:hover {
-  background: #2563eb;
+  background: var(--buttonhover);
 }
 </style>

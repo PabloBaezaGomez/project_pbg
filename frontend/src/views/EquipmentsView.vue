@@ -1,9 +1,9 @@
 <template>
   <div class="equipments-container">
     <div class="equipments-grid">
-      <router-link 
-        v-for="equipment in equipments" 
-        :key="equipment.equipment_id" 
+      <router-link
+        v-for="equipment in equipments"
+        :key="equipment.equipment_id"
         :to="`/equipment/${equipment.equipment_id}`"
         class="equipment-card"
       >
@@ -58,7 +58,7 @@ export default {
 }
 
 .equipment-card {
-  border: 1px solid #ddd;
+  border: 1px solid var(--bordercolor);
   border-radius: 8px;
   padding: 15px;
   text-align: center;
@@ -70,7 +70,7 @@ export default {
 
 .equipment-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px var(--shadowcolor);
 }
 
 .equipment-card img {
@@ -86,7 +86,7 @@ export default {
 }
 
 .type-name {
-  color: #666;
+  color: var(--text);
   font-size: 0.9em;
 }
 </style>

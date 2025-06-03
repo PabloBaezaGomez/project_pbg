@@ -12,3 +12,6 @@ app.use(createPinia())
 app.use(router)
 
 app.mount('#app')
+
+app.config.devtools = false;
+app.config.productionTip = false;

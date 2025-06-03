@@ -1,54 +1,46 @@
-/* color palette from <https://github.com/vuejs/theme> */
 :root {
-  --vt-c-white: #ffffff;
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
+  /*Normal texts colors*/
+  --textcolor: #000;
+  --accentcolor: #45a049;
+  --accentcolor2: #555;
+  --accentcolor3: #888;
+  --logintitle: #000;
+  --labletext: #000;
+  --successtext: #3c763d;
+  --errortext: #a94442;
+  --linkcolor: green;
 
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
+  /*Borders and shadows*/
+  --bordercolor: #000;
+  --bordercard: #000;
+  --shadowcolor: rgba(0, 0, 0, 0.1);
+  --successborder: #d6e9c6;
+  --errorborder: #ebccd1;
 
-  --vt-c-indigo: #2c3e50;
+  /*Buttons*/
+  --buttonhover: #45a049;
+  --textbutton: #fff;
+  --button: #4CAF50;
+  --buttondisabled: #ccc;
+  --removebutton: #f44336;
+  --removebuttonhover: #c82333;
 
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
-
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+  /*Backgrounds*/
+  --inputbackground: #fff;
+  --successbackground: #dff0d8;
+  --errorbackground: #f2dede;
+  --formbackground: #f2f2f2;
+  --backgroundcolor: #eee;
+  --backgroundcard: #fff;
+  --titlebackground: #ddd;
+  --selectedbackground: rgba(60, 60, 60, 0.12);
 }
 
-/* semantic color variables for this project */
-:root {
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
-
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
-
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
-
-  --section-gap: 160px;
-}
-
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
-    --color-background-mute: var(--vt-c-black-mute);
 
-    --color-border: var(--vt-c-divider-dark-2);
-    --color-border-hover: var(--vt-c-divider-dark-1);
-
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
   }
-}
+} */
 
 *,
 *::before,
@@ -60,8 +52,8 @@
 
 body {
   min-height: 100vh;
-  color: var(--color-text);
-  background: var(--color-background);
+  color: var(--textcolor);
+  background: var(--backgroundcolor);
   transition:
     color 0.5s,
     background-color 0.5s;

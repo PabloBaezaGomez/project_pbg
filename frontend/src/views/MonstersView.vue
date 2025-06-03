@@ -1,9 +1,9 @@
 <template>
   <div class="monsters-container">
     <div class="monsters-grid">
-      <router-link 
-        v-for="monster in monsters" 
-        :key="monster.foe_id" 
+      <router-link
+        v-for="monster in monsters"
+        :key="monster.foe_id"
         :to="`/monster/${monster.foe_id}`"
         class="monster-card"
       >
@@ -59,7 +59,7 @@ export default {
 }
 
 .monster-card {
-  border: 1px solid #ddd;
+  border: 1px solid var(--bordercard);
   border-radius: 8px;
   padding: 15px;
   text-align: center;
@@ -71,7 +71,7 @@ export default {
 
 .monster-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px var(--shadowcolor);
 }
 
 .monster-card img {
@@ -87,7 +87,7 @@ export default {
 }
 
 .type-name {
-  color: #666;
+  color: var(--accentcolor3);
   font-size: 0.9em;
   margin-top: 5px;
 }

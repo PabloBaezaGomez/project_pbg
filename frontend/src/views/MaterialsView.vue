@@ -75,7 +75,7 @@ export default {
       if (!authStore.token) return
 
       const materialsToAdd = Object.entries(materialQuantities.value)
-        .filter(([_, quantity]) => quantity > 0)
+        .filter(([quantity]) => quantity > 0)
         .map(([materialId, quantity]) => ({
           material_id: parseInt(materialId),
           quantity: parseInt(quantity),
@@ -129,18 +129,15 @@ export default {
 .sticky-header {
   position: sticky;
   top: 0;
-  background-color: white;
-  padding: 1rem;
   z-index: 10;
-  border-bottom: 1px solid var(--color-border);
   margin-bottom: 1rem;
 }
 
 .add-all-button {
   width: 100%;
   padding: 1rem;
-  background-color: #4caf50;
-  color: white;
+  background-color: var(--button);
+  color: var(--textbutton);
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -149,12 +146,12 @@ export default {
 }
 
 .add-all-button:disabled {
-  background-color: #cccccc;
+  background-color: var(--buttondisabled);
   cursor: not-allowed;
 }
 
 .add-all-button:hover:not(:disabled) {
-  background-color: #45a049;
+  background-color: var(--buttonhover);
 }
 
 .materials-grid {
@@ -176,10 +173,10 @@ export default {
 }
 
 .material-card {
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--bordercard);
   border-radius: 8px;
   padding: 15px;
-  background-color: white;
+  background-color: var(--backgroundcard);
   transition:
     transform 0.2s,
     box-shadow 0.2s;
@@ -201,7 +198,7 @@ export default {
 
 .material-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px var(--shadowcolor);
 }
 
 .material-card img {
@@ -217,13 +214,13 @@ export default {
 }
 
 .material-type {
-  color: #666;
+  color: var(--accentcolor2);
   font-size: 0.9em;
   margin: 5px 0;
 }
 
 .material-rarity {
-  color: #45a049;
+  color: var(--accentcolor);
   font-weight: bold;
   margin: 5px 0;
 }
@@ -231,7 +228,7 @@ export default {
 .material-description {
   font-size: 0.9em;
   margin: 10px 0;
-  color: #666;
+  color: var(--accentcolor2);
 }
 
 .material-actions {
@@ -242,7 +239,7 @@ export default {
 
 .current-quantity {
   font-weight: bold;
-  color: #2c3e50;
+  color: var(--accentcolor3);
   margin-bottom: 10px;
 }
 

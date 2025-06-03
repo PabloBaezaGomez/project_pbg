@@ -153,19 +153,19 @@ export default {
   setup() {
     const router = useRouter()
     const isSubmitting = ref(false)
-    
+
     const monsterData = ref({
       foe_name: '',
       foe_type: '',
       foe_size: '',
       foe_description: ''
     })
-    
+
     const iconFile = ref(null)
     const imageFile = ref(null)
     const iconPreview = ref(null)
     const imagePreview = ref(null)
-    
+
     const foeTypes = ref([])
     const materials = ref([])
     const materialDrops = ref([{ material_id: '', drop_rate: '' }])
@@ -216,18 +216,18 @@ export default {
     const createMonster = async () => {
       if (isSubmitting.value) return
       isSubmitting.value = true
-      
+
       try {
         // Validate required fields before sending
-        if (!monsterData.value.foe_name || !monsterData.value.foe_type || 
+        if (!monsterData.value.foe_name || !monsterData.value.foe_type ||
             !monsterData.value.foe_size || !monsterData.value.foe_description) {
           throw new Error('Please fill in all required fields')
         }
-        
+
         if (!iconFile.value || !imageFile.value) {
           throw new Error('Both icon and image files are required')
         }
-        
+
         // Log FormData contents for debugging
         console.log('Form data being sent:')
         console.log('foe_name:', monsterData.value.foe_name)
@@ -236,11 +236,11 @@ export default {
         console.log('foe_description:', monsterData.value.foe_description)
         console.log('iconFile:', iconFile.value)
         console.log('imageFile:', imageFile.value)
-        
+
         const filteredMaterials = materialDrops.value.filter(
           material => material.material_id && material.drop_rate
         )
-        
+
         const formData = new FormData()
         formData.append('foe_name', monsterData.value.foe_name)
         formData.append('foe_type', monsterData.value.foe_type)
@@ -248,7 +248,7 @@ export default {
         formData.append('foe_description', monsterData.value.foe_description)
         formData.append('foe_icon', iconFile.value)
         formData.append('foe_image', imageFile.value)
-        
+
         // Add materials data
         if (filteredMaterials.length > 0) {
           filteredMaterials.forEach((material, index) => {
@@ -264,7 +264,7 @@ export default {
       } catch (error) {
         console.error('Error creating monster:', error)
         let errorMessage = 'Error creating monster.'
-        
+
         // Better error message handling
         if (error.response?.status === 422) {
           console.log('Validation errors:', error.response.data)
@@ -279,7 +279,7 @@ export default {
         } else if (error.message) {
           errorMessage += '\n' + error.message
         }
-        
+
         alert(errorMessage)
       } finally {
         isSubmitting.value = false
@@ -346,7 +346,7 @@ export default {
 }
 
 .monster-form {
-  background: #f9f9f9;
+  background: var(--formbackground);
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -368,9 +368,17 @@ export default {
 .form-textarea {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--inputbackground);
   border-radius: 4px;
   font-size: 16px;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--button);
+  box-shadow: 0 0 0 2px var(--shadowcolor);
 }
 
 .file-input {
@@ -389,15 +397,13 @@ export default {
   max-width: 200px;
   max-height: 200px;
   border-radius: 4px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--bordercard);
 }
 
 .materials-section {
-  margin: 30px 0;
-  padding: 20px;
-  background: #fff;
-  border-radius: 8px;
-  border: 1px solid #ddd;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--bordercolor);
 }
 
 .material-drop {
@@ -407,13 +413,12 @@ export default {
   align-items: end;
   margin-bottom: 15px;
   padding: 15px;
-  background: #f5f5f5;
   border-radius: 4px;
 }
 
 .remove-btn {
-  background: #dc3545;
-  color: white;
+  background: var(--removebutton);
+  color: var(--textbutton);
   border: none;
   padding: 10px 15px;
   border-radius: 4px;
@@ -422,7 +427,7 @@ export default {
 }
 
 .remove-btn:hover {
-  background: #c82333;
+  background: var(--removebuttonhover);
 }
 
 .form-actions {
@@ -432,34 +437,34 @@ export default {
 }
 
 .submit-btn {
-  background: #007bff;
-  color: white;
+  background: var(--button);
+  color: var(--textbutton);
   border: none;
-  padding: 12px 24px;
+  padding: 0.75rem 2rem;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 .submit-btn:hover:not(:disabled) {
-  background: #0056b3;
+  background: var(--buttonhover);
 }
 
 .submit-btn:disabled {
-  background: #6c757d;
+  background: var(--buttondisabled);
   cursor: not-allowed;
 }
 
 .cancel-btn {
-  background: #6c757d;
-  color: white;
+  background: var(--removebutton);
+  color: var(--textbutton);
   text-decoration: none;
-  padding: 12px 24px;
+  padding: 0.75rem 2rem;
   border-radius: 4px;
   display: inline-block;
 }
 
 .cancel-btn:hover {
-  background: #545b62;
+  background: var(--removebuttonhover);
 }
 </style>

@@ -80,7 +80,7 @@ export default {
 
 .monster-image {
   width: 50%;
-  height: 50%;
+  max-width: 250px;
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 15px;
@@ -88,7 +88,7 @@ export default {
 
 .monster-level {
   font-size: 1.2em;
-  color: #666;
+  color: var(--accentcolor3);
   margin: 10px 0;
 }
 
@@ -113,7 +113,7 @@ export default {
   align-items: center;
   gap: 10px;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--bordercard);
   border-radius: 5px;
   text-decoration: none; /* Add this */
   color: inherit; /* Add this */
@@ -122,7 +122,7 @@ export default {
 
 .material-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px var(--shadowcolor);
 }
 
 .material-item img {
@@ -133,7 +133,7 @@ export default {
 
 .drop-rate {
   margin-left: auto;
-  color: #4CAF50;
+  color: var(--accentcolor);
   font-weight: bold;
 }
 
@@ -144,12 +144,12 @@ export default {
   gap: 10px;
   margin: 10px 0;
   font-size: 1.1em;
-  color: #444;
+  color: var(--accentcolor2);
 }
 
 .monster-size {
   font-size: 1.1em;
-  color: #666;
+  color: var(--accentcolor3);
   margin: 10px 0;
 }
 
@@ -165,6 +165,6 @@ export default {
 
 .material-rarity {
   font-size: 0.9em;
-  color: #666;
+  color: var(--accentcolor3);
 }
 </style>

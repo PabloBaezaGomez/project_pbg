@@ -134,8 +134,10 @@ export default {
 }
 
 .equipment-image {
-  width: 200px;
-  height: 200px;
+  width: 50%;
+  max-width: 250px;
+  height: 50%;
+  max-height: 250px;
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 15px;
@@ -147,6 +149,7 @@ export default {
   justify-content: center;
   gap: 10px;
   margin: 10px 0;
+  color: var(--accentcolor3);
 }
 
 .type-icon {
@@ -170,7 +173,7 @@ export default {
   align-items: center;
   gap: 10px;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--bordercolor);
   border-radius: 5px;
   text-decoration: none; /* Add this */
   color: inherit; /* Add this */
@@ -179,7 +182,7 @@ export default {
 
 .material-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px var(--shadowcolor);
 }
 
 .material-item img {
@@ -196,8 +199,8 @@ export default {
 .craft-button {
   width: 100%;
   padding: 15px;
-  background-color: #4CAF50;
-  color: white;
+  background-color: var(--button);
+  color: var(--textbutton);
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -206,12 +209,12 @@ export default {
 }
 
 .craft-button:disabled {
-  background-color: #cccccc;
+  background-color: var(--buttondisabled);
   cursor: not-allowed;
 }
 
 .craft-button:hover:not(:disabled) {
-  background-color: #45a049;
+  background-color: var(--buttonhover);
 }
 
 .craft-result {
@@ -221,15 +224,15 @@ export default {
 }
 
 .craft-result.success {
-  background-color: #dff0d8;
-  color: #3c763d;
-  border: 1px solid #d6e9c6;
+  background-color: var(--successbackground);
+  color: var(--successtext);
+  border: 1px solid var(--successborder);
 }
 
 .craft-result.error {
-  background-color: #f2dede;
-  color: #a94442;
-  border: 1px solid #ebccd1;
+  background-color: var(--errorbackground);
+  color: var(--errortext);
+  border: 1px solid var(--errorborder);
 }
 
 .craft-result ul {

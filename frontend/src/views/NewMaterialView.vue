@@ -58,24 +58,12 @@
 
       <div class="monster-drops-section">
         <h3>Monster Drops (Optional)</h3>
-        <div
-          v-for="(monster, index) in monsterDrops"
-          :key="index"
-          class="monster-drop"
-        >
+        <div v-for="(monster, index) in monsterDrops" :key="index" class="monster-drop">
           <div class="form-group">
             <label>Monster:</label>
-            <select
-              v-model="monster.monster_id"
-              class="form-select"
-              @change="checkAddNewMonster"
-            >
+            <select v-model="monster.monster_id" class="form-select" @change="checkAddNewMonster">
               <option value="">Select a monster</option>
-              <option
-                v-for="mon in monsters"
-                :key="mon.foe_id"
-                :value="mon.foe_id"
-              >
+              <option v-for="mon in monsters" :key="mon.foe_id" :value="mon.foe_id">
                 {{ mon.foe_name }}
               </option>
             </select>
@@ -130,18 +118,18 @@ export default {
       material_name: '',
       material_type: '',
       material_description: '',
-      material_rarity: 1
+      material_rarity: 1,
     })
 
     const monsterDrops = ref([{ monster_id: '', drop_rate: '' }])
 
     const fetchMaterialTypes = async () => {
-        try {
-            const response = await materialService.getMaterialTypes()
-            materialTypes.value = response.data.data
-        } catch (error) {
-            console.error('Error fetching material types:', error)
-        }
+      try {
+        const response = await materialService.getMaterialTypes()
+        materialTypes.value = response.data.data
+      } catch (error) {
+        console.error('Error fetching material types:', error)
+      }
     }
 
     const fetchMonsters = async () => {
@@ -169,7 +157,7 @@ export default {
         isSubmitting.value = true
 
         const filteredMonsters = monsterDrops.value.filter(
-          monster => monster.monster_id && monster.drop_rate
+          (monster) => monster.monster_id && monster.drop_rate,
         )
 
         const materialPayload = {
@@ -177,10 +165,10 @@ export default {
           material_type: materialData.value.material_type,
           material_description: materialData.value.material_description,
           material_rarity: parseInt(materialData.value.material_rarity),
-          foes: filteredMonsters.map(monster => ({
+          foes: filteredMonsters.map((monster) => ({
             foe_id: monster.monster_id,
-            drop_rate: parseFloat(monster.drop_rate)
-          }))
+            drop_rate: parseFloat(monster.drop_rate),
+          })),
         }
 
         const response = await materialService.create(materialPayload)
@@ -190,8 +178,8 @@ export default {
       } catch (error) {
         console.error('Error creating material:', error)
       } finally {
-        isSubmitting.value = false;
-        router.push('/materials');
+        isSubmitting.value = false
+        router.push('/materials')
       }
     }
 
@@ -208,9 +196,9 @@ export default {
       isSubmitting,
       createMaterial,
       checkAddNewMonster,
-      removeMonster
+      removeMonster,
     }
-  }
+  },
 }
 </script>
 
@@ -222,7 +210,7 @@ export default {
 }
 
 .material-form {
-  background: #f9f9f9;
+  background: var(--formbackground);
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -236,7 +224,7 @@ export default {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
-  color: #333;
+  color: var(--accentcolor2);
 }
 
 .form-input,
@@ -244,9 +232,17 @@ export default {
 .form-textarea {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--inputbackground);
   border-radius: 4px;
   font-size: 14px;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--button);
+  box-shadow: 0 0 0 2px var(--shadowcolor);
 }
 
 .form-textarea {
@@ -262,19 +258,22 @@ export default {
   grid-template-columns: 1fr 1fr auto;
   gap: 15px;
   padding: 15px;
-  border: 1px solid #ddd;
   border-radius: 4px;
   margin-bottom: 15px;
 }
 
 .remove-btn {
-  background-color: #dc3545;
-  color: white;
+  background-color: var(--removebutton);
+  color: var(--textbutton);
   border: none;
   padding: 8px 15px;
   border-radius: 4px;
   cursor: pointer;
   align-self: flex-end;
+}
+
+.remove-btn:hover {
+  background: var(--removebuttonhover);
 }
 
 .form-actions {
@@ -292,20 +291,31 @@ export default {
   text-decoration: none;
 }
 
+.cancel-btn:hover {
+  background: var(--removebuttonhover);
+}
+
 .submit-btn {
-  background-color: #45a049;
-  color: white;
+  background: var(--button);
+  color: var(--textbutton);
   border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
 }
 
 .submit-btn:disabled {
-  background-color: #cccccc;
+  background-color: var(--buttondisabled);
   cursor: not-allowed;
 }
 
 .cancel-btn {
-  background-color: #6c757d;
-  color: white;
-  border: none;
+  background: var(--removebutton);
+  color: var(--textbutton);
+  text-decoration: none;
+  padding: 0.75rem 2rem;
+  border-radius: 4px;
+  display: inline-block;
 }
 </style>

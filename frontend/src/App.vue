@@ -27,8 +27,8 @@ onMounted(async () => {
           <button @click="authStore.logout">Logout</button>
         </template>
         <template v-else-if="!authStore.user && !authStore.isAuthLoading">
-          <RouterLink to="/login">Login</RouterLink>
-          <RouterLink to="/register">Register</RouterLink>
+          <RouterLink to="/login" class="auth-button">Login</RouterLink>
+          <RouterLink to="/register" class="auth-button">Register</RouterLink>
         </template>
         <template v-else>
           <span>Loading authentication...</span>
@@ -69,9 +69,9 @@ onMounted(async () => {
 }
 
 .header {
-  background-color: var(--color-background-soft);
+  background-color: var(--titlebackground);
   padding: 1rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--bordercolor);
   display: flex;
   align-items: center; /* Centra verticalmente los elementos del header */
   justify-content: space-between; /* Espacia el título y los botones */
@@ -79,14 +79,14 @@ onMounted(async () => {
 
 .title {
   font-size: 1rem;
-  color: var(--color-text);
+  color: var(--textcolor);
   text-align: center;
   flex: 1;
 }
 
 .username {
   padding: 0.5rem 1rem;
-  color: var(--color-text);
+  color: var(--textcolor);
   display: flex;
   align-items: center;
 }
@@ -101,8 +101,7 @@ onMounted(async () => {
 .auth-button {
   padding: 0.5rem 1rem;
   text-decoration: none;
-  color: var(--color-text);
-  background-color: var(--color-border);
+  color: var(--linkcolor);
   border-radius: 0.25rem;
 }
 
@@ -118,19 +117,19 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  border-right: 1px solid var(--color-border);
+  border-right: 1px solid var(--bordercolor);
   flex-shrink: 0;
 }
 
 .sidebar a {
   padding: 0.5rem 1rem;
   text-decoration: none;
-  color: var(--color-text);
+  color: var(--textcolor);
   border-radius: 0.25rem;
 }
 
 .sidebar a.router-link-active {
-  background-color: var(--color-border);
+  background-color: var(--selectedbackground);
   font-weight: bold;
 }
 
@@ -147,7 +146,7 @@ onMounted(async () => {
   .sidebar {
     width: 100%;
     border-right: none;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--bordercolor);
   }
 
   .main-content {
@@ -157,7 +156,7 @@ onMounted(async () => {
 
 .loading {
   padding: 0.5rem 1rem;
-  color: var(--color-text);
+  color: var(--textcolor);
 }
 
 .loading-container {

@@ -191,18 +191,18 @@ export default {
 
 .type-info {
   margin: 10px 0;
-  color: #666;
+  color: var(--accentcolor3);
 }
 
 .rarity {
-  color: #45a049;
+  color: var(--accentcolor);
   font-weight: bold;
   margin: 10px 0;
 }
 
 .description {
   margin: 15px 0;
-  color: #2c3e50;
+  color: var(--accentcolor2);
 }
 
 .user-material-section {
@@ -232,8 +232,8 @@ export default {
 
 .add-button {
   padding: 8px 20px;
-  background-color: #4caf50;
-  color: white;
+  background-color: var(--button);
+  color: var(--textbutton);
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -241,12 +241,12 @@ export default {
 }
 
 .add-button:disabled {
-  background-color: #cccccc;
+  background-color: var(--buttondisabled);
   cursor: not-allowed;
 }
 
 .add-button:hover:not(:disabled) {
-  background-color: #45a049;
+  background-color: var(--buttonhover);
 }
 
 /* Add these new styles */
@@ -310,7 +310,7 @@ export default {
 .monster-item:hover,
 .equipment-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px var(--shadowcolor);
 }
 
 .monster-icon,
@@ -337,6 +337,6 @@ export default {
 .drop-rate,
 .required-quantity {
   font-size: 0.9em;
-  color: #666;
+  color: var(--accentcolor3);
 }
 </style>
