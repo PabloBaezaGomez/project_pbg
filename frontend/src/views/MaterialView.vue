@@ -1,4 +1,5 @@
 <template>
+  <!-- Shows all the info from one material -->
   <div class="material-detail-container" v-if="material">
     <div class="material-info">
       <img :src="getMaterialTypeIcon(material.type.icon)" :alt="material.material_name" class="material-image" />
@@ -10,7 +11,7 @@
       <p class="description">{{ material.material_description }}</p>
     </div>
 
-    <!-- Add Monsters Section -->
+    <!-- Monsters Section -->
     <div class="monsters-section" v-if="material.foes && material.foes.length > 0">
       <h3>Dropped by Monsters</h3>
       <div class="monsters-list">
@@ -29,7 +30,7 @@
       </div>
     </div>
 
-    <!-- Add Equipment Section -->
+    <!-- Equipment Section -->
     <div class="equipment-section">
       <h3>Used in Equipment</h3>
       <div class="equipment-list">
@@ -67,23 +68,24 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-import { materialService } from '@/services/api'
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+import { materialService } from '@/services/api';
 
 export default {
   setup() {
-    const route = useRoute()
-    const authStore = useAuthStore()
-    const material = ref(null)
-    const userQuantity = ref(0)
-    const quantityToAdd = ref(1)
-    const isAdding = ref(false)
+    const route = useRoute();
+    const authStore = useAuthStore();
+    const material = ref(null);
+    const userQuantity = ref(0);
+    const quantityToAdd = ref(1);
+    const isAdding = ref(false);
 
+    // Fetch material details from the API
     const fetchMaterial = async () => {
       try {
-        const response = await materialService.getOne(route.params.id)
+        const response = await materialService.getOne(route.params.id);
         material.value = {
           material_id: response.data.data.material.id,
           material_name: response.data.data.material.name,
@@ -98,27 +100,29 @@ export default {
           equipment: response.data.data.material.equipment
         }
       } catch (error) {
-        console.error('Error fetching material:', error)
+        console.error('Error fetching material:', error);
       }
     }
 
+    // Fetch user material quantity from the API
     const fetchUserMaterial = async () => {
       if (!authStore.token) return
       try {
-        const response = await materialService.getUserMaterials()
+        const response = await materialService.getUserMaterials();
         const userMaterial = response.data.data.find(
           (m) => m.material_id === parseInt(route.params.id),
         )
-        userQuantity.value = userMaterial ? userMaterial.quantity : 0
+        userQuantity.value = userMaterial ? userMaterial.quantity : 0;
       } catch (error) {
-        console.error('Error fetching user material:', error)
+        console.error('Error fetching user material:', error);
       }
     }
 
+    // Function to add materials to the user's inventory
     const addMaterial = async () => {
-      if (!authStore.token || quantityToAdd.value < 1) return
+      if (!authStore.token || quantityToAdd.value < 1) return;
 
-      isAdding.value = true
+      isAdding.value = true;
       try {
         await materialService.addMaterials([
           {
@@ -126,27 +130,29 @@ export default {
             quantity: parseInt(quantityToAdd.value),
           },
         ])
-        await fetchUserMaterial()
-        quantityToAdd.value = 1
+        await fetchUserMaterial();
+        quantityToAdd.value = 1;
       } catch (error) {
-        console.error('Error adding material:', error)
+        console.error('Error adding material:', error);
       } finally {
-        isAdding.value = false
+        isAdding.value = false;
       }
     }
 
+    // Helper functions to get icons for material types, monsters, and equipment
     const getMaterialTypeIcon = (iconPath) => {
-      return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_material_type.png'
+      return `http://localhost:8000/storage/${iconPath}`;
     }
 
     const getMonsterIcon = (iconPath) => {
-      return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_monster.png'
+      return `http://localhost:8000/storage/${iconPath}`;
     }
 
     const getEquipmentTypeIcon = (iconPath) => {
-      return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_equipment_type.png'
+      return `http://localhost:8000/storage/${iconPath}`;
     }
 
+    // Fetch material and user material when the component is mounted
     onMounted(() => {
       fetchMaterial()
       if (authStore.token) {

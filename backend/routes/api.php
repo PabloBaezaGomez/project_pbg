@@ -14,11 +14,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::post('/register', [AuthController::class, 'register']);
 
+// Public routes for listing all entities of one type
 Route::get('/foes', [FoeController::class, 'index']);
 Route::get('/equipment', [EquipmentController::class, 'index']);
 Route::get('/materials', [MaterialController::class, 'index']);
 
-// Add these new routes
 Route::get('/foes/{foe}/materials', [FoeController::class, 'getMaterials']);
 Route::get('/equipment/{equipment}/materials', [EquipmentController::class, 'getMaterials']);
 
@@ -27,11 +27,11 @@ Route::get('/foes/{foe}', [FoeController::class, 'show']);
 Route::get('/equipment/{equipment}', [EquipmentController::class, 'show']);
 Route::get('/materials/{material}', [MaterialController::class,'show']);
 
+// Protected routes for authenticated users
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [UserController::class, 'show']);
     Route::get('/user/data', [UserController::class, 'data']);
 
-    // Protected routes for authenticated users
     Route::get('/user/materials', [UserController::class, 'getUserMaterials']);
     Route::get('/user/equipment', [UserController::class, 'getUserEquipment']);
     Route::post('/equipment/craft', [EquipmentController::class, 'craftEquipment']);
@@ -44,10 +44,8 @@ Route::get('/material-types', [MaterialController::class, 'getTypes']);
 Route::get('/equipment-types', [EquipmentController::class, 'getTypes']);
 
 Route::middleware(['auth:sanctum', \App\Http\Middleware\AdminOnly::class])->group(function () {
-    // Your admin-only routes here
+    // Routes for admin users to manage foes, equipment, and materials
     Route::post('/foes', [FoeController::class, 'store']);
-    Route::put('/foes/{foe}', [FoeController::class, 'update']);
-    Route::delete('/foes/{foe}', [FoeController::class, 'destroy']);
     Route::post('/equipment', [EquipmentController::class, 'store']);
     Route::post('/materials', [MaterialController::class, 'store']); // Added materials creation route
 });

@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('foe_types', function (Blueprint $table) {
             $table->id('foe_type_id');
             $table->string('foe_type_name');
-            $table->timestamps(); // Added timestamps
+            $table->timestamps();
         });
     }
 

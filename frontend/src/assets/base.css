@@ -1,46 +1,46 @@
 :root {
   /*Normal texts colors*/
   --textcolor: #000;
-  --accentcolor: #45a049;
-  --accentcolor2: #555;
-  --accentcolor3: #888;
+  --accentcolor: #4a5c50;
+  --accentcolor2: #3a3a3a;
+  --accentcolor3: #555;
   --logintitle: #000;
   --labletext: #000;
   --successtext: #3c763d;
   --errortext: #a94442;
-  --linkcolor: green;
+  --linkcolor: #0e2e35;
+  --titlecolor: #312929;
 
   /*Borders and shadows*/
-  --bordercolor: #000;
-  --bordercard: #000;
+  --bordercolor: #635a5a;
+  --bordercard: #FFC361;
   --shadowcolor: rgba(0, 0, 0, 0.1);
   --successborder: #d6e9c6;
   --errorborder: #ebccd1;
+  --inputborder: #a0a0a0;
 
   /*Buttons*/
-  --buttonhover: #45a049;
-  --textbutton: #fff;
-  --button: #4CAF50;
+  --buttonhover: #e1aa52;
+  --textbutton: #000;
+  --button: #FFC361;
   --buttondisabled: #ccc;
-  --removebutton: #f44336;
-  --removebuttonhover: #c82333;
+  --removebutton: #544343;
+  --removebuttonhover: #635a5a;
+  --textcancelbutton: #fff;
 
   /*Backgrounds*/
   --inputbackground: #fff;
   --successbackground: #dff0d8;
   --errorbackground: #f2dede;
-  --formbackground: #f2f2f2;
-  --backgroundcolor: #eee;
-  --backgroundcard: #fff;
-  --titlebackground: #ddd;
-  --selectedbackground: rgba(60, 60, 60, 0.12);
+  --formbackground: #89A89475;
+  --backgroundcolor: #FFC36130;
+  --backgroundcard: #FFC36140;
+  --titlebackground: #89A894;
+  --selectedbackground: #89A89455;
+  --linkhover: #89A89433;
+  --sidebarbackground: #89A89422;
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-
-  }
-} */
 
 *,
 *::before,

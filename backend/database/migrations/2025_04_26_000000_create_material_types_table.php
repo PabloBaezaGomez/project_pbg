@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id('material_type_id');
             $table->string('material_type_name');
             $table->string('material_type_icon')->nullable();
-            $table->timestamps(); // Added timestamps
+            $table->timestamps();
         });
     }
 

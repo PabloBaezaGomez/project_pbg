@@ -12,12 +12,25 @@ use Illuminate\Support\Str;
 
 class FoeController extends Controller
 {
+    /**
+     * Display a listing of all foes.
+     * This method retrieves all foes along with their types and returns them in a JSON response.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         $foes = Foe::with('type')->get();
         return response()->json(['data' => $foes]);
     }
 
+    /**
+     * Display a specific foe by ID.
+     * This method retrieves a foe along with its type and materials, returning them in a JSON response.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show($id)
     {
         $foe = Foe::with(['type', 'materials.type'])->findOrFail($id);
@@ -29,6 +42,13 @@ class FoeController extends Controller
         ]);
     }
 
+    /**
+     * Get materials for a specific foe.
+     * This method retrieves the materials associated with a foe, including their types.
+     *
+     * @param \App\Models\Foe $foe
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getMaterials(Foe $foe)
     {
         return response()->json([
@@ -37,12 +57,27 @@ class FoeController extends Controller
         ]);
     }
 
+    /**
+     * Get all foe types.
+     * This method retrieves all foe types and returns them in a JSON response.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getTypes()
     {
         $types = FoeType::all();
         return response()->json(['data' => $types]);
     }
 
+    /**
+     * Store a new monster (foe).
+     * This method allows the creation of new monsters by validating the request data,
+     * handling file uploads, and storing the monster along with its materials.
+     * It returns a JSON response indicating success or failure.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([

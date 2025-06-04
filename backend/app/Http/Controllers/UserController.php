@@ -8,11 +8,24 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+    /**
+     * Display a listing of all materials.
+     * This method retrieves all materials and returns them in a JSON response.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         return response()->json(Material::all());
     }
 
+    /**
+     * Display the authenticated user's information.
+     * This method retrieves the user's name and type and returns them in a JSON response.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show(Request $request)
     {
         $user = $request->user();
@@ -27,6 +40,10 @@ class UserController extends Controller
 
     /**
      * Get materials for authenticated user
+     * This method retrieves the materials associated with the currently authenticated user,
+     * including their types and quantities.
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function getUserMaterials(Request $request)
     {
@@ -52,6 +69,10 @@ class UserController extends Controller
 
     /**
      * Get equipment for authenticated user
+     * This method retrieves the equipment associated with the currently authenticated user,
+     * including their types and stats.
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function getUserEquipment(Request $request)
     {

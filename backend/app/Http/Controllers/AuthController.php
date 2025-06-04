@@ -10,6 +10,14 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    /**
+     * The login in this platform is done using the email and password.
+     * The user must provide a valid email and password to log in.
+     * If the credentials are correct, a token is generated and returned.
+     * If the credentials are incorrect, a validation exception is thrown.
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -31,6 +39,12 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Logout the user by deleting the current access token.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
@@ -40,6 +54,14 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Register a new user.
+     * The user must provide a unique username, email, and a password.
+     * If the registration is successful, a new user is created and a token is generated.
+     * If there is an error during registration, an error message is returned.
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function register(Request $request)
     {
         $validated = $request->validate([

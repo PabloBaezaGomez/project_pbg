@@ -9,6 +9,12 @@ use App\Models\MaterialType;
 
 class MaterialController extends Controller
 {
+    /**
+     * Display a listing of all materials.
+     * This method retrieves all materials along with their types and returns them in a JSON response.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         $materials = Material::with('type')->get()->map(function ($material) {
@@ -28,6 +34,12 @@ class MaterialController extends Controller
         return response()->json($materials);
     }
 
+    /**
+     * Get materials for the authenticated user.
+     * This method retrieves the materials associated with the currently authenticated user.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function userMaterials()
     {
         $user = Auth::user();
@@ -35,6 +47,13 @@ class MaterialController extends Controller
         return response()->json($materials);
     }
 
+    /**
+     * Display a specific material by ID.
+     * This method retrieves a material along with its type, equipment, and foes, returning them in a JSON response.
+     *
+     * @param \App\Models\Material $material
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show(Material $material)
     {
         return response()->json([
@@ -76,6 +95,14 @@ class MaterialController extends Controller
         ]);
     }
 
+    /**
+     * Store a new material.
+     * This method allows the creation of new materials by validating the request data,
+     * handling foes and their drop rates, and returning a JSON response indicating success or failure.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -121,6 +148,12 @@ class MaterialController extends Controller
         }
     }
 
+    /**
+     * Get all material types.
+     * This method retrieves all material types and returns them in a JSON response.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getTypes()
     {
         $types = MaterialType::all()->map(function ($type) {

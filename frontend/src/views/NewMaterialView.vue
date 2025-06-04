@@ -1,4 +1,5 @@
 <template>
+  <!-- Admin only view to create a material -->
   <div class="new-material-container">
     <h2>Create New Material</h2>
     <form @submit.prevent="createMaterial" class="material-form">
@@ -102,63 +103,68 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { materialService, foeService } from '@/services/api'
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { materialService, foeService } from '@/services/api';
 
 export default {
   name: 'NewMaterialView',
   setup() {
-    const router = useRouter()
-    const materialTypes = ref([])
-    const monsters = ref([])
-    const isSubmitting = ref(false)
+    const router = useRouter();
+    const materialTypes = ref([]);
+    const monsters = ref([]);
+    const isSubmitting = ref(false);
 
     const materialData = ref({
       material_name: '',
       material_type: '',
       material_description: '',
       material_rarity: 1,
-    })
+    });
 
-    const monsterDrops = ref([{ monster_id: '', drop_rate: '' }])
+    const monsterDrops = ref([{ monster_id: '', drop_rate: '' }]);
 
+    // Fetch material types and monsters from the API
     const fetchMaterialTypes = async () => {
       try {
-        const response = await materialService.getMaterialTypes()
-        materialTypes.value = response.data.data
+        const response = await materialService.getMaterialTypes();
+        materialTypes.value = response.data.data;
       } catch (error) {
-        console.error('Error fetching material types:', error)
+        console.error('Error fetching material types:', error);
       }
-    }
+    };
 
+    // Fetch all monsters from the API
     const fetchMonsters = async () => {
       try {
-        const response = await foeService.getAll()
-        monsters.value = response.data.data
+        const response = await foeService.getAll();
+        monsters.value = response.data.data;
       } catch (error) {
-        console.error('Error fetching monsters:', error)
+        console.error('Error fetching monsters:', error);
       }
-    }
+    };
 
+    // Check if the last monster drop entry is valid and add a new one if it is
     const checkAddNewMonster = () => {
-      const lastMonster = monsterDrops.value[monsterDrops.value.length - 1]
+      const lastMonster = monsterDrops.value[monsterDrops.value.length - 1];
       if (lastMonster.monster_id && lastMonster.drop_rate) {
-        monsterDrops.value.push({ monster_id: '', drop_rate: '' })
+        monsterDrops.value.push({ monster_id: '', drop_rate: '' });
       }
-    }
+    };
 
+    // Remove a monster drop entry by index when introducing the monsters that drop them
     const removeMonster = (index) => {
-      monsterDrops.value.splice(index, 1)
-    }
+      monsterDrops.value.splice(index, 1);
+    };
 
+    // Create a new material with the provided data
     const createMaterial = async () => {
       try {
-        isSubmitting.value = true
+        isSubmitting.value = true;
 
         const filteredMonsters = monsterDrops.value.filter(
           (monster) => monster.monster_id && monster.drop_rate,
-        )
+        );
 
         const materialPayload = {
           material_name: materialData.value.material_name,
@@ -169,24 +175,25 @@ export default {
             foe_id: monster.monster_id,
             drop_rate: parseFloat(monster.drop_rate),
           })),
-        }
+        };
 
-        const response = await materialService.create(materialPayload)
+        const response = await materialService.create(materialPayload);
         if (response.data.success) {
-          router.push('/materials')
+          router.push('/materials');
         }
       } catch (error) {
-        console.error('Error creating material:', error)
+        console.error('Error creating material:', error);
       } finally {
-        isSubmitting.value = false
-        router.push('/materials')
+        isSubmitting.value = false;
+        router.push('/materials');
       }
-    }
+    };
 
+    // Fetch material types and monsters when the component is mounted
     onMounted(() => {
-      fetchMaterialTypes()
-      fetchMonsters()
-    })
+      fetchMaterialTypes();
+      fetchMonsters();
+    });
 
     return {
       materialData,
@@ -197,9 +204,9 @@ export default {
       createMaterial,
       checkAddNewMonster,
       removeMonster,
-    }
+    };
   },
-}
+};
 </script>
 
 <style scoped>
@@ -312,7 +319,7 @@ export default {
 
 .cancel-btn {
   background: var(--removebutton);
-  color: var(--textbutton);
+  color: var(--textcancelbutton);
   text-decoration: none;
   padding: 0.75rem 2rem;
   border-radius: 4px;

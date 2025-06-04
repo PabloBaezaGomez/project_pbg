@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->string('user_type');
             $table->string('user_password');
             $table->string('user_email')->unique();
-            $table->timestamps(); // Added timestamps
+            $table->timestamps();
         });
     }
 

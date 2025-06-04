@@ -1,4 +1,5 @@
 <template>
+  <!-- Shows the user all the materials with their images -->
   <div class="materials-container">
     <div v-if="authStore.token" class="sticky-header">
       <button @click="addAllMaterials" :disabled="isAdding" class="add-all-button">
@@ -35,44 +36,47 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
-import { useAuthStore } from '@/stores/auth'
-import { materialService } from '@/services/api'
+import { ref, onMounted } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import { materialService } from '@/services/api';
 
 export default {
   setup() {
-    const authStore = useAuthStore()
-    const materials = ref([])
-    const userMaterials = ref({})
-    const materialQuantities = ref({})
-    const isAdding = ref(false)
+    const authStore = useAuthStore();
+    const materials = ref([]);
+    const userMaterials = ref({});
+    const materialQuantities = ref({});
+    const isAdding = ref(false);
 
+    // Fetch all materials from the API
     const fetchMaterials = async () => {
       try {
-        const response = await materialService.getAll()
-        materials.value = response.data
+        const response = await materialService.getAll();
+        materials.value = response.data;
       } catch (error) {
-        console.error('Error fetching materials:', error)
+        console.error('Error fetching materials:', error);
       }
     }
 
+    // Fetch user materials quantities from the API
     const fetchUserMaterials = async () => {
-      if (!authStore.token) return
+      if (!authStore.token) return;
 
       try {
-        const response = await materialService.getUserMaterials()
-        const materialsData = response.data.data || response.data
+        const response = await materialService.getUserMaterials();
+        const materialsData = response.data.data || response.data;
         userMaterials.value = materialsData.reduce((acc, material) => {
-          acc[material.material_id] = material.pivot ? material.pivot.quantity : material.quantity
-          return acc
+          acc[material.material_id] = material.pivot ? material.pivot.quantity : material.quantity;
+          return acc;
         }, {})
       } catch (error) {
-        console.error('Error fetching user materials:', error)
+        console.error('Error fetching user materials:', error);
       }
     }
 
+    // Function to add all materials with specified quantities
     const addAllMaterials = async () => {
-      if (!authStore.token) return
+      if (!authStore.token) return;
 
       const materialsToAdd = Object.entries(materialQuantities.value)
         .filter(([quantity]) => quantity > 0)
@@ -81,26 +85,28 @@ export default {
           quantity: parseInt(quantity),
         }))
 
-      if (materialsToAdd.length === 0) return
+      if (materialsToAdd.length === 0) return;
 
-      isAdding.value = true
+      isAdding.value = true;
       try {
-        await materialService.addMaterials(materialsToAdd)
-        await fetchUserMaterials()
-        materialQuantities.value = {}
+        await materialService.addMaterials(materialsToAdd);
+        await fetchUserMaterials();
+        materialQuantities.value = {};
       } catch (error) {
-        console.error('Error adding materials:', error)
+        console.error('Error adding materials:', error);
       } finally {
-        isAdding.value = false
+        isAdding.value = false;
       }
     }
 
+    // Function to get the material type icon URL
     const getMaterialTypeIcon = (iconPath) => {
       return iconPath
         ? `http://localhost:8000/storage/${iconPath}`
         : '/img/default_material_type.png'
     }
 
+    // Fetch materials and user materials when the component is mounted
     onMounted(() => {
       fetchMaterials()
       if (authStore.token) {
@@ -182,9 +188,9 @@ export default {
     box-shadow 0.2s;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centra horizontalmente los elementos */
-  justify-content: center; /* Centra verticalmente los elementos */
-  text-align: center; /* Centra el texto */
+  align-items: center; 
+  justify-content: center; 
+  text-align: center; 
 }
 
 .material-link {
@@ -193,7 +199,12 @@ export default {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centra el contenido del link */
+  align-items: center; 
+}
+
+.material-link:hover {
+  background-color: #00000000;
+  text-decoration: none;
 }
 
 .material-card:hover {
@@ -234,7 +245,7 @@ export default {
 .material-actions {
   margin-top: 15px;
   padding-top: 15px;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--bordercard);
 }
 
 .current-quantity {
@@ -246,14 +257,14 @@ export default {
 .add-material input {
   width: 100%;
   padding: 8px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--inputborder);
   border-radius: 4px;
   margin-top: 5px;
 }
 
 @media (max-width: 768px) {
   .materials-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: 1fr;
   }
 }
 </style>

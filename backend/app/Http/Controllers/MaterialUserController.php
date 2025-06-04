@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\DB;
 
 class MaterialUserController extends Controller
 {
+    /**
+     * Add materials to the authenticated user's inventory.
+     * This method allows users to add multiple materials with specified amounts,
+     * handling both existing and new material entries in the user's inventory.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function addMaterial(Request $request)
     {
         $request->validate([

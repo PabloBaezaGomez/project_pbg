@@ -1,4 +1,5 @@
 <template>
+  <!-- Registering a new user -->
   <div class="register-container">
     <form @submit.prevent="handleRegister" class="register-form">
       <h2>Register</h2>
@@ -66,60 +67,63 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-import { authService } from '@/services/api'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+import { authService } from '@/services/api';
 
 export default {
   setup() {
-    const router = useRouter()
-    const authStore = useAuthStore()
-    const errors = ref({})
-    const isLoading = ref(false)
+    const router = useRouter();
+    const authStore = useAuthStore();
+    const errors = ref({});
+    const isLoading = ref(false);
 
+    // Form data for registration
     const formData = ref({
       user_name: '',
       user_email: '',
       user_password: '',
       password_confirmation: ''
-    })
+    });
 
+    // Handles the registration process
     const handleRegister = async () => {
-      errors.value = {}
-      isLoading.value = true
+      errors.value = {};
+      isLoading.value = true;
 
       try {
-        const response = await authService.register(formData.value)
-        console.log('Registration response:', response)
+        const response = await authService.register(formData.value);
+        console.log('Registration response:', response);
 
         // Check for the nested data structure
         if (response.data?.data?.token) {
-          authStore.setAuth(response.data.data.token, response.data.data.user)
-          router.push('/')
+          authStore.setAuth(response.data.data.token, response.data.data.user);
+          router.push('/');
         } else if (response.data?.token) {
           // Fallback for direct token access
-          authStore.setAuth(response.data.token, response.data.user)
-          router.push('/')
+          authStore.setAuth(response.data.token, response.data.user);
+          router.push('/');
         } else {
           errors.value = {
             general: ['Registration successful but login failed. Please try logging in.']
-          }
-          router.push('/login')
+          };
+          router.push('/login');
         }
       } catch (err) {
-        console.error('Registration error:', err.response)
+        console.error('Registration error:', err.response);
 
+        // Handle validation and server errors
         if (err.response?.data?.errors) {
-          errors.value = err.response.data.errors
+          errors.value = err.response.data.errors;
         } else if (err.response?.status === 422) {
           errors.value = {
             general: ['Please check your input and try again']
-          }
+          };
         } else if (err.response?.status === 409) {
           errors.value = {
             user_email: ['This email is already registered']
-          }
+          };
         } else {
           errors.value = {
             general: [
@@ -127,21 +131,21 @@ export default {
               err.message ||
               'Registration failed. Please try again.'
             ]
-          }
+          };
         }
       } finally {
-        isLoading.value = false
+        isLoading.value = false;
       }
-    }
+    };
 
     return {
       formData,
       errors,
       isLoading,
       handleRegister
-    }
+    };
   }
-}
+};
 </script>
 
 <style scoped>
@@ -172,7 +176,7 @@ label {
 input {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid var(--inputbackground);
+  border: 1px solid var(--inputborder);
   border-radius: 4px;
   font-size: 1rem;
 }

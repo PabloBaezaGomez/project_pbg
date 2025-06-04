@@ -1,18 +1,19 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-import { onMounted } from 'vue' // Remove ref import as it's no longer needed for isAuthLoading
+import { RouterLink, RouterView } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+import { onMounted } from 'vue';
 
-const authStore = useAuthStore()
-// const isAuthLoading = ref(true) // Remove this line
+const authStore = useAuthStore();
+// Import the auth store to manage authentication state
 
+// Initialize authentication on mount
 onMounted(async () => {
   try {
-    await authStore.initializeAuth()
+    await authStore.initializeAuth();
   } catch (error) {
-    console.error('Auth initialization failed:', error)
+    console.error('Auth initialization failed:', error);
   }
-})
+});
 </script>
 
 <template>
@@ -24,7 +25,7 @@ onMounted(async () => {
       <div class="auth-buttons">
         <template v-if="authStore.user && !authStore.isAuthLoading">
           <span>Welcome, {{ authStore.user.user_name }}</span>
-          <button @click="authStore.logout">Logout</button>
+          <RouterLink to="/" class="auth-button" @click.prevent="authStore.logout">Logout</RouterLink>
         </template>
         <template v-else-if="!authStore.user && !authStore.isAuthLoading">
           <RouterLink to="/login" class="auth-button">Login</RouterLink>
@@ -44,7 +45,13 @@ onMounted(async () => {
         <template v-if="!authStore.isAuthLoading && authStore.user">
           <RouterLink to="/UserEquipments">My Equipment</RouterLink>
         </template>
-        <template v-if="!authStore.isAuthLoading && authStore.user && (authStore.user.role === 'admin' || authStore.user.user_type === 'admin')">
+        <template
+          v-if="
+            !authStore.isAuthLoading &&
+            authStore.user &&
+            (authStore.user.role === 'admin' || authStore.user.user_type === 'admin')
+          "
+        >
           <RouterLink to="/newEquipment">New Equipment</RouterLink>
           <RouterLink to="/newMonster">New Monster</RouterLink>
           <RouterLink to="/newMaterial">New Material</RouterLink>
@@ -64,61 +71,89 @@ onMounted(async () => {
 <style scoped>
 .app-container {
   display: flex;
-  flex-direction: column;
   min-height: 100vh;
+  flex-direction: column;
 }
 
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 72px;
   background-color: var(--titlebackground);
   padding: 1rem;
-  border-bottom: 1px solid var(--bordercolor);
+  border-bottom: 2px solid var(--bordercolor);
   display: flex;
-  align-items: center; /* Centra verticalmente los elementos del header */
-  justify-content: space-between; /* Espacia el título y los botones */
+  align-items: center;
+  justify-content: space-between;
+  z-index: 200;
+  box-sizing: border-box;
 }
 
 .title {
-  font-size: 1rem;
-  color: var(--textcolor);
-  text-align: center;
   flex: 1;
+  display: flex;
+  justify-content: center; /* Centra el título */
+  align-items: center;
 }
 
-.username {
-  padding: 0.5rem 1rem;
-  color: var(--textcolor);
-  display: flex;
-  align-items: center;
+h1{
+  color: var(--titlecolor);
 }
 
 .auth-buttons {
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
+  gap: 1.5rem; /* Más separación entre los elementos */
   align-items: center;
 }
 
-.auth-button {
-  padding: 0.5rem 1rem;
-  text-decoration: none;
-  color: var(--linkcolor);
-  border-radius: 0.25rem;
+.auth-button,
+.auth-buttons button {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.auth-buttons span {
+  margin-right: 1rem;
 }
 
 .content-wrapper {
   display: flex;
   flex: 1;
+  min-height: 100vh;
 }
 
 .sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
   width: 25%;
   min-width: 200px;
-  padding: 1rem;
+  max-width: 320px;
+  height: 100vh;
+  background: var(--sidebarbackground);
+  border-right: 1px solid var(--bordercolor);
+  z-index: 100;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding-top: 72px;
+  overflow-y: auto;
+}
+
+.sidebar-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 0.5rem;
-  border-right: 1px solid var(--bordercolor);
-  flex-shrink: 0;
 }
 
 .sidebar a {
@@ -126,6 +161,8 @@ onMounted(async () => {
   text-decoration: none;
   color: var(--textcolor);
   border-radius: 0.25rem;
+  width: 80%;
+  text-align: center;
 }
 
 .sidebar a.router-link-active {
@@ -136,21 +173,91 @@ onMounted(async () => {
 .main-content {
   flex: 1;
   padding: 2rem;
+  min-width: 0;
+  margin-left: 25%;
+  margin-top: 72px;
+}
+
+@media (max-width: 1200px) {
+  .sidebar {
+    width: 220px;
+    min-width: 0;
+    max-width: none;
+  }
+  .main-content {
+    margin-left: 220px;
+  }
 }
 
 @media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+  .header {
+    position: static;
+    width: 100%;
+    height: auto;
+    padding-top: 1rem;
+    z-index: auto;
+  }
   .content-wrapper {
     flex-direction: column;
   }
-
   .sidebar {
+    position: static;
     width: 100%;
+    min-width: 0;
+    max-width: none;
+    height: 56px; /* Altura fija para la barra de navegación */
     border-right: none;
     border-bottom: 1px solid var(--bordercolor);
+    justify-content: center;
+    align-items: center;
+    padding-top: 0;
+    padding-bottom: 0;
+    background: white;
+    z-index: auto;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
   }
-
-  .main-content {
+  .sidebar a {
+    width: auto;
+    min-width: 60px;
+    font-size: 0.95em;
+    text-align: center;
+    padding: 0.4rem 0.5rem;
+    margin: 0 0.15rem;
+    display: flex;
+    align-items: center;      /* Centra verticalmente el texto */
+    justify-content: center;  /* Centra horizontalmente el texto */
+    height: 100%;             /* Ocupa toda la altura de la barra */
+    white-space: nowrap;
+  }
+  .sidebar-content {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
     width: 100%;
+    gap: 0.3rem;
+    display: flex;
+    height: 100%;
+  }
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 1rem;
+    padding-top: 0;
+  }
+  .auth-buttons {
+    position: static;
+    right: unset;
+    top: unset;
+    transform: none;
+    margin-left: auto;
+    margin-right: 0;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 }
 

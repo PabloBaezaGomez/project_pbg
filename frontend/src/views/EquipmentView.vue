@@ -1,4 +1,5 @@
 <template>
+  <!-- This component shows all the information of one equipment -->
   <div class="equipment-detail-container" v-if="equipment">
     <div class="equipment-info">
       <img :src="getEquipmentIcon(equipment.equipment_image)" :alt="equipment.equipment_name" class="equipment-image">
@@ -50,34 +51,37 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-import { equipmentService } from '@/services/api'
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+import { equipmentService } from '@/services/api';
 
 export default {
+  //Define the functions for the component
   setup() {
-    const route = useRoute()
-    const authStore = useAuthStore()
-    const equipment = ref(null)
-    const isCrafting = ref(false)
-    const craftResult = ref(null)
+    const route = useRoute();
+    const authStore = useAuthStore();
+    const equipment = ref(null);
+    const isCrafting = ref(false);
+    const craftResult = ref(null);
 
+    // Fetch the equipment details from the API
     const fetchEquipment = async () => {
       try {
-        const response = await equipmentService.getOne(route.params.id)
-        equipment.value = response.data.data.equipment
+        const response = await equipmentService.getOne(route.params.id);
+        equipment.value = response.data.data.equipment;
       } catch (error) {
-        console.error('Error fetching equipment:', error)
+        console.error('Error fetching equipment:', error);
       }
     }
 
+    // Function to handle crafting the equipment
     const craftEquipment = async () => {
-      isCrafting.value = true
-      craftResult.value = null
+      isCrafting.value = true;
+      craftResult.value = null;
 
       try {
-        const response = await equipmentService.craft(equipment.value.equipment_id)
+        const response = await equipmentService.craft(equipment.value.equipment_id);
         craftResult.value = {
           success: true,
           message: response.data.message
@@ -89,24 +93,29 @@ export default {
           missing_materials: error.response.data.missing_materials
         }
       } finally {
-        isCrafting.value = false
+        isCrafting.value = false;
       }
     }
 
+    // Builds the URL for the equipment icon
     const getEquipmentIcon = (iconPath) => {
-      return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_equipment.png'
+      return `http://localhost:8000/storage/${iconPath}`;
     }
 
+    // Builds the URL for the type icon
     const getTypeIcon = (iconPath) => {
-      return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_equipment_type.png'
+      return `http://localhost:8000/storage/${iconPath}`;
     }
 
+    // Builds the URL for the material type icon
     const getMaterialTypeIcon = (iconPath) => {
-      return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_material_type.png'
+      return `http://localhost:8000/storage/${iconPath}`;
     }
 
-    onMounted(fetchEquipment)
+    // Fetch equipment details when the component is mounted
+    onMounted(fetchEquipment);
 
+    // Return the reactive variables and functions to the template
     return {
       equipment,
       authStore,

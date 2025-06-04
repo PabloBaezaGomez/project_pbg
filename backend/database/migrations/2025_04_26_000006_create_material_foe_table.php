@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->foreignId('foe_id')->constrained('foes', 'foe_id')->onDelete('cascade');
             $table->decimal('drop_rate', 5, 2);
             $table->primary(['material_id', 'foe_id']);
-            $table->timestamps(); // Added timestamps
+            $table->timestamps();
         });
     }
 

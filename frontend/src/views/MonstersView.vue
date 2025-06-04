@@ -1,4 +1,5 @@
 <template>
+  <!-- Shows all the monsters with their icons and names -->
   <div class="monsters-container">
     <div class="monsters-grid">
       <router-link
@@ -16,13 +17,14 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
-import { foeService } from '@/services/api'
+import { ref, onMounted } from 'vue';
+import { foeService } from '@/services/api';
 
 export default {
   setup() {
-    const monsters = ref([])
+    const monsters = ref([]);
 
+    // Fetch all monsters from the API
     const fetchMonsters = async () => {
       try {
         const response = await foeService.getAll()
@@ -32,11 +34,12 @@ export default {
       }
     }
 
-    // Función para construir la URL de la imagen
+    // Helper function to get the monster icon URL
     const getMonsterIcon = (iconPath) => {
       return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_monster.png'
     }
 
+    // Fetch monsters when the component is mounted
     onMounted(fetchMonsters)
 
     return {
@@ -59,6 +62,7 @@ export default {
 }
 
 .monster-card {
+  background-color: var(--backgroundcard);
   border: 1px solid var(--bordercard);
   border-radius: 8px;
   padding: 15px;
@@ -90,5 +94,11 @@ export default {
   color: var(--accentcolor3);
   font-size: 0.9em;
   margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+  .monsters-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

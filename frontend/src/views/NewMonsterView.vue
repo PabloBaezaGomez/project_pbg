@@ -1,4 +1,5 @@
 <template>
+  <!-- Admin only view to create a monster -->
   <div class="new-monster-container">
     <h2>Create New Monster</h2>
     <form @submit.prevent="createMonster" class="monster-form" enctype="multipart/form-data">
@@ -145,180 +146,186 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { foeService, materialService } from '@/services/api'
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { foeService, materialService } from '@/services/api';
 
 export default {
   setup() {
-    const router = useRouter()
-    const isSubmitting = ref(false)
+    const router = useRouter();
+    const isSubmitting = ref(false);
 
+    // Monster data to be created
     const monsterData = ref({
       foe_name: '',
       foe_type: '',
       foe_size: '',
       foe_description: ''
-    })
+    });
 
-    const iconFile = ref(null)
-    const imageFile = ref(null)
-    const iconPreview = ref(null)
-    const imagePreview = ref(null)
+    // Icon and image files and their previews
+    const iconFile = ref(null);
+    const imageFile = ref(null);
+    const iconPreview = ref(null);
+    const imagePreview = ref(null);
 
-    const foeTypes = ref([])
-    const materials = ref([])
-    const materialDrops = ref([{ material_id: '', drop_rate: '' }])
+    // Monster types and available materials
+    const foeTypes = ref([]);
+    const materials = ref([]);
+    // Materials that the monster can drop
+    const materialDrops = ref([{ material_id: '', drop_rate: '' }]);
 
+    // Validate image file type
     const validateFileType = (file) => {
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml']
-      return allowedTypes.includes(file.type)
-    }
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'];
+      return allowedTypes.includes(file.type);
+    };
 
+    // Handle icon file upload and preview
     const handleIconUpload = (event) => {
-      const file = event.target.files[0]
+      const file = event.target.files[0];
       if (file) {
         if (!validateFileType(file)) {
-          alert('Icon must be a JPEG, PNG, JPG, GIF, or SVG file')
-          event.target.value = '' // Clear the file input
-          iconFile.value = null
-          iconPreview.value = null
-          return
+          alert('Icon must be a JPEG, PNG, JPG, GIF, or SVG file');
+          event.target.value = ''; // Clear the file input
+          iconFile.value = null;
+          iconPreview.value = null;
+          return;
         }
-        iconFile.value = file
-        const reader = new FileReader()
+        iconFile.value = file;
+        const reader = new FileReader();
         reader.onload = (e) => {
-          iconPreview.value = e.target.result
-        }
-        reader.readAsDataURL(file)
+          iconPreview.value = e.target.result;
+        };
+        reader.readAsDataURL(file);
       }
-    }
+    };
 
+    // Handle main image file upload and preview
     const handleImageUpload = (event) => {
-      const file = event.target.files[0]
+      const file = event.target.files[0];
       if (file) {
         if (!validateFileType(file)) {
-          alert('Image must be a JPEG, PNG, JPG, GIF, or SVG file')
-          event.target.value = '' // Clear the file input
-          imageFile.value = null
-          imagePreview.value = null
-          return
+          alert('Image must be a JPEG, PNG, JPG, GIF, or SVG file');
+          event.target.value = ''; // Clear the file input
+          imageFile.value = null;
+          imagePreview.value = null;
+          return;
         }
-        imageFile.value = file
-        const reader = new FileReader()
+        imageFile.value = file;
+        const reader = new FileReader();
         reader.onload = (e) => {
-          imagePreview.value = e.target.result
-        }
-        reader.readAsDataURL(file)
+          imagePreview.value = e.target.result;
+        };
+        reader.readAsDataURL(file);
       }
-    }
+    };
 
+    // Submit the form to create the monster
     const createMonster = async () => {
-      if (isSubmitting.value) return
-      isSubmitting.value = true
+      if (isSubmitting.value) return;
+      isSubmitting.value = true;
 
       try {
         // Validate required fields before sending
         if (!monsterData.value.foe_name || !monsterData.value.foe_type ||
             !monsterData.value.foe_size || !monsterData.value.foe_description) {
-          throw new Error('Please fill in all required fields')
+          throw new Error('Please fill in all required fields');
         }
 
         if (!iconFile.value || !imageFile.value) {
-          throw new Error('Both icon and image files are required')
+          throw new Error('Both icon and image files are required');
         }
 
-        // Log FormData contents for debugging
-        console.log('Form data being sent:')
-        console.log('foe_name:', monsterData.value.foe_name)
-        console.log('foe_type:', monsterData.value.foe_type)
-        console.log('foe_size:', monsterData.value.foe_size)
-        console.log('foe_description:', monsterData.value.foe_description)
-        console.log('iconFile:', iconFile.value)
-        console.log('imageFile:', imageFile.value)
-
+        // Filter valid materials
         const filteredMaterials = materialDrops.value.filter(
           material => material.material_id && material.drop_rate
-        )
+        );
 
-        const formData = new FormData()
-        formData.append('foe_name', monsterData.value.foe_name)
-        formData.append('foe_type', monsterData.value.foe_type)
-        formData.append('foe_size', monsterData.value.foe_size)
-        formData.append('foe_description', monsterData.value.foe_description)
-        formData.append('foe_icon', iconFile.value)
-        formData.append('foe_image', imageFile.value)
+        // Build FormData to send files and data
+        const formData = new FormData();
+        formData.append('foe_name', monsterData.value.foe_name);
+        formData.append('foe_type', monsterData.value.foe_type);
+        formData.append('foe_size', monsterData.value.foe_size);
+        formData.append('foe_description', monsterData.value.foe_description);
+        formData.append('foe_icon', iconFile.value);
+        formData.append('foe_image', imageFile.value);
 
-        // Add materials data
+        // Add materials data to FormData
         if (filteredMaterials.length > 0) {
           filteredMaterials.forEach((material, index) => {
-            formData.append(`materials[${index}][material_id]`, material.material_id)
-            formData.append(`materials[${index}][drop_rate]`, material.drop_rate)
-          })
+            formData.append(`materials[${index}][material_id]`, material.material_id);
+            formData.append(`materials[${index}][drop_rate]`, material.drop_rate);
+          });
         }
 
-        const response = await foeService.create(formData)
+        const response = await foeService.create(formData);
         if (response.data.success) {
-          router.push('/monsters')
+          router.push('/monsters');
         }
       } catch (error) {
-        console.error('Error creating monster:', error)
-        let errorMessage = 'Error creating monster.'
+        console.error('Error creating monster:', error);
+        let errorMessage = 'Error creating monster.';
 
         // Better error message handling
         if (error.response?.status === 422) {
-          console.log('Validation errors:', error.response.data)
+          console.log('Validation errors:', error.response.data);
           if (error.response.data.errors) {
             const errors = Object.entries(error.response.data.errors)
               .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
-              .join('\n')
-            errorMessage += '\n\nValidation errors:\n' + errors
+              .join('\n');
+            errorMessage += '\n\nValidation errors:\n' + errors;
           } else if (error.response.data.message) {
-            errorMessage += '\n' + error.response.data.message
+            errorMessage += '\n' + error.response.data.message;
           }
         } else if (error.message) {
-          errorMessage += '\n' + error.message
+          errorMessage += '\n' + error.message;
         }
 
-        alert(errorMessage)
+        alert(errorMessage);
       } finally {
-        isSubmitting.value = false
+        isSubmitting.value = false;
       }
-    }
+    };
 
+    // Fetch available monster types
     const fetchFoeTypes = async () => {
       try {
-        const response = await foeService.getTypes()
-        foeTypes.value = response.data.data
+        const response = await foeService.getTypes();
+        foeTypes.value = response.data.data;
       } catch (error) {
-        console.error('Error fetching foe types:', error)
+        console.error('Error fetching foe types:', error);
       }
-    }
+    };
 
+    // Fetch available materials
     const fetchMaterials = async () => {
       try {
-        const response = await materialService.getAll()
-        materials.value = response.data
+        const response = await materialService.getAll();
+        materials.value = response.data;
       } catch (error) {
-        console.error('Error fetching materials:', error)
+        console.error('Error fetching materials:', error);
       }
-    }
+    };
 
+    // Add a new material drop input if the last one is filled
     const checkAddNewMaterial = () => {
-      const lastMaterial = materialDrops.value[materialDrops.value.length - 1]
+      const lastMaterial = materialDrops.value[materialDrops.value.length - 1];
       if (lastMaterial.material_id && lastMaterial.drop_rate) {
-        materialDrops.value.push({ material_id: '', drop_rate: '' })
+        materialDrops.value.push({ material_id: '', drop_rate: '' });
       }
-    }
+    };
 
+    // Remove a material drop input
     const removeMaterial = (index) => {
-      materialDrops.value.splice(index, 1)
-    }
+      materialDrops.value.splice(index, 1);
+    };
 
+    // Fetch types and materials on mount
     onMounted(() => {
-      fetchFoeTypes()
-      fetchMaterials()
-    })
+      fetchFoeTypes();
+      fetchMaterials();
+    });
 
     return {
       monsterData,
@@ -333,9 +340,9 @@ export default {
       removeMaterial,
       handleIconUpload,
       handleImageUpload
-    }
+    };
   }
-}
+};
 </script>
 
 <style scoped>
@@ -457,7 +464,7 @@ export default {
 
 .cancel-btn {
   background: var(--removebutton);
-  color: var(--textbutton);
+  color: var(--textcancelbutton);
   text-decoration: none;
   padding: 0.75rem 2rem;
   border-radius: 4px;

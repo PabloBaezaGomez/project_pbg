@@ -10,7 +10,7 @@ class EquipmentTableSeeder extends Seeder
     public function run()
     {
         DB::table('equipment')->insert([
-            // 14 tipos de armas (2 de cada)
+            // 14 weapons type (2 of each)
             ['equipment_name' => 'Iron Great Sword',      'equipment_type' => 1,  'equipment_stat' => 80,  'equipment_description' => 'A heavy sword with great power.', 'equipment_image' => 'equipment_image/iron_great_sword.png'],
             ['equipment_name' => 'Wyvern Jawblade',       'equipment_type' => 1,  'equipment_stat' => 120, 'equipment_description' => 'A massive blade made from wyvern jaws.', 'equipment_image' => 'equipment_image/wyvern_jawblade.png'],
 
@@ -53,7 +53,7 @@ class EquipmentTableSeeder extends Seeder
             ['equipment_name' => 'Heavy Bowgun',          'equipment_type' => 14, 'equipment_stat' => 90,  'equipment_description' => 'A heavy bowgun with high firepower.', 'equipment_image' => 'equipment_image/heavy_bowgun.png'],
             ['equipment_name' => 'Destruction Cannon',    'equipment_type' => 14, 'equipment_stat' => 150, 'equipment_description' => 'A bowgun that can destroy anything.', 'equipment_image' => 'equipment_image/destruction_cannon.png'],
 
-            // 5 partes de armadura (2 de cada)
+            // 5 armor parts (2 of each)
             ['equipment_name' => 'Leather Headgear',      'equipment_type' => 15, 'equipment_stat' => 10,  'equipment_description' => 'Basic head protection.', 'equipment_image' => 'equipment_image/leather_headgear.png'],
             ['equipment_name' => 'Rathalos Helm',         'equipment_type' => 15, 'equipment_stat' => 40,  'equipment_description' => 'Helmet crafted from Rathalos.', 'equipment_image' => 'equipment_image/rathalos_helm.png'],
 

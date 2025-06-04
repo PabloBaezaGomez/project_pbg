@@ -1,4 +1,5 @@
 <template>
+  <!-- This page shows all the equipments in the database, with the icon of the type of weapon -->
   <div class="equipments-container">
     <div class="equipments-grid">
       <router-link
@@ -16,27 +17,31 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
-import { equipmentService } from '@/services/api'
+import { ref, onMounted } from 'vue';
+import { equipmentService } from '@/services/api';
 
 export default {
   setup() {
-    const equipments = ref([])
+    const equipments = ref([]);
 
+    // Fetch all equipments from the API
+    // and store them in the equipments ref
     const fetchEquipments = async () => {
       try {
-        const response = await equipmentService.getAll()
-        equipments.value = response.data
+        const response = await equipmentService.getAll();
+        equipments.value = response.data;
       } catch (error) {
-        console.error('Error fetching equipments:', error)
+        console.error('Error fetching equipments:', error);
       }
     }
 
+    // Builds the URL for the equipment icon
     const getEquipmentIcon = (iconPath) => {
-      return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_equipment.png'
+      return `http://localhost:8000/storage/${iconPath}`;
     }
 
-    onMounted(fetchEquipments)
+    // Fetch equipments when the component is mounted
+    onMounted(fetchEquipments);
 
     return {
       equipments,
@@ -47,6 +52,7 @@ export default {
 </script>
 
 <style scoped>
+/* The styling of the component */
 .equipments-container {
   padding: 20px;
 }
@@ -57,7 +63,9 @@ export default {
   gap: 20px;
 }
 
+/**All the variables are in base.css */
 .equipment-card {
+  background-color: var(--backgroundcard);
   border: 1px solid var(--bordercolor);
   border-radius: 8px;
   padding: 15px;
@@ -88,5 +96,11 @@ export default {
 .type-name {
   color: var(--text);
   font-size: 0.9em;
+}
+
+@media (max-width: 768px) {
+  .equipments-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

@@ -14,11 +14,11 @@ return new class extends Migration {
             $table->integer('equipment_stat');
             $table->text('equipment_description')->nullable();
             $table->string('equipment_image')->nullable();
-            $table->timestamps(); // Added timestamps
+            $table->timestamps();
         });
     }
 
     public function down(): void {
-        Schema::dropIfExists('equipment'); // Fixed table name to match creation
+        Schema::dropIfExists('equipment');
     }
 };

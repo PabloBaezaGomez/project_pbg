@@ -1,4 +1,5 @@
 <template>
+  <!-- Admin only view to create an equipment -->
   <div class="new-equipment-container">
     <h2>Create New Equipment</h2>
     <form @submit.prevent="createEquipment" class="equipment-form" enctype="multipart/form-data">
@@ -126,14 +127,14 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { equipmentService, materialService } from '@/services/api'
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { equipmentService, materialService } from '@/services/api';
 
 export default {
   setup() {
-    const router = useRouter()
-    const isSubmitting = ref(false)
+    const router = useRouter();
+    const isSubmitting = ref(false);
 
     const equipmentData = ref({
       equipment_name: '',
@@ -142,49 +143,52 @@ export default {
       equipment_description: ''
     })
 
-    const imageFile = ref(null)
-    const imagePreview = ref(null)
+    const imageFile = ref(null);
+    const imagePreview = ref(null);
 
-    const equipmentTypes = ref([])
-    const materials = ref([])
-    const materialRequirements = ref([{ material_id: '', quantity: '' }])
+    const equipmentTypes = ref([]);
+    const materials = ref([]);
+    const materialRequirements = ref([{ material_id: '', quantity: '' }]);
 
+    // Validate file type for image upload
     const validateFileType = (file) => {
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml']
-      return allowedTypes.includes(file.type)
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'];
+      return allowedTypes.includes(file.type);
     }
 
+    // Handle image upload and preview
     const handleImageUpload = (event) => {
-      const file = event.target.files[0]
+      const file = event.target.files[0];
       if (file) {
         if (!validateFileType(file)) {
-          alert('Image must be a JPEG, PNG, JPG, GIF, or SVG file')
-          event.target.value = ''
-          imageFile.value = null
-          imagePreview.value = null
-          return
+          alert('Image must be a JPEG, PNG, JPG, GIF, or SVG file');
+          event.target.value = '';
+          imageFile.value = null;
+          imagePreview.value = null;
+          return;
         }
-        imageFile.value = file
-        const reader = new FileReader()
+        imageFile.value = file;
+        const reader = new FileReader();
         reader.onload = (e) => {
-          imagePreview.value = e.target.result
+          imagePreview.value = e.target.result;
         }
-        reader.readAsDataURL(file)
+        reader.readAsDataURL(file);
       }
     }
 
+    // Function to create new equipment
     const createEquipment = async () => {
       if (isSubmitting.value) return
-      isSubmitting.value = true
+      isSubmitting.value = true;
 
       try {
         if (!equipmentData.value.equipment_name || !equipmentData.value.equipment_type ||
             !equipmentData.value.equipment_stat || !equipmentData.value.equipment_description) {
-          throw new Error('Please fill in all required fields')
+          throw new Error('Please fill in all required fields');
         }
 
         if (!imageFile.value) {
-          throw new Error('Equipment image is required')
+          throw new Error('Equipment image is required');
         }
 
         const filteredMaterials = materialRequirements.value.filter(
@@ -192,52 +196,53 @@ export default {
         )
 
         const formData = new FormData()
-        formData.append('equipment_name', equipmentData.value.equipment_name)
-        formData.append('equipment_type', equipmentData.value.equipment_type)
-        formData.append('equipment_stat', equipmentData.value.equipment_stat)
-        formData.append('equipment_description', equipmentData.value.equipment_description)
-        formData.append('equipment_image', imageFile.value)
+        formData.append('equipment_name', equipmentData.value.equipment_name);
+        formData.append('equipment_type', equipmentData.value.equipment_type);
+        formData.append('equipment_stat', equipmentData.value.equipment_stat);
+        formData.append('equipment_description', equipmentData.value.equipment_description);
+        formData.append('equipment_image', imageFile.value);
 
         if (filteredMaterials.length > 0) {
           filteredMaterials.forEach((material, index) => {
-            formData.append(`materials[${index}][material_id]`, material.material_id)
-            formData.append(`materials[${index}][quantity]`, material.quantity)
+            formData.append(`materials[${index}][material_id]`, material.material_id);
+            formData.append(`materials[${index}][quantity]`, material.quantity);
           })
         }
 
-        const response = await equipmentService.create(formData)
+        const response = await equipmentService.create(formData);
         if (response.data.success) {
-          router.push('/equipments')
+          router.push('/equipments');
         }
       } catch (error) {
-        console.error('Error creating equipment:', error)
-        let errorMessage = 'Error creating equipment.'
+        console.error('Error creating equipment:', error);
+        let errorMessage = 'Error creating equipment.';
 
         if (error.response?.status === 422) {
           if (error.response.data.errors) {
             const errors = Object.entries(error.response.data.errors)
               .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
-              .join('\n')
-            errorMessage += '\n\nValidation errors:\n' + errors
+              .join('\n');
+            errorMessage += '\n\nValidation errors:\n' + errors;
           } else if (error.response.data.message) {
-            errorMessage += '\n' + error.response.data.message
+            errorMessage += '\n' + error.response.data.message;
           }
         } else if (error.message) {
-          errorMessage += '\n' + error.message
+          errorMessage += '\n' + error.message;
         }
 
-        alert(errorMessage)
+        alert(errorMessage);
       } finally {
-        isSubmitting.value = false
+        isSubmitting.value = false;
       }
     }
 
+    // Fetch equipment types from the API
     const fetchEquipmentTypes = async () => {
       try {
-        const response = await equipmentService.getTypes()
-        equipmentTypes.value = response.data.data
+        const response = await equipmentService.getTypes();
+        equipmentTypes.value = response.data.data;
       } catch (error) {
-        console.error('Error fetching equipment types:', error)
+        console.error('Error fetching equipment types:', error);
       }
     }
 
@@ -403,7 +408,7 @@ label {
 
 .cancel-btn {
   background: var(--removebutton);
-  color: var(--textbutton);
+  color: var(--textcancelbutton);
   text-decoration: none;
   padding: 0.75rem 2rem;
   border-radius: 4px;

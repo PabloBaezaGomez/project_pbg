@@ -1,4 +1,5 @@
 <template>
+  <!-- Shows all the information of one monster, with its image, not the icon -->
   <div class="monster-detail-container" v-if="monster">
     <div class="monster-info">
       <img :src=getMonsterImage(monster.foe.foe_image) :alt="monster.foe.foe_name" class="monster-image">
@@ -33,33 +34,36 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { foeService } from '@/services/api'
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { foeService } from '@/services/api';
 
 export default {
   setup() {
-    const route = useRoute()
-    const monster = ref(null)
+    const route = useRoute();
+    const monster = ref(null);
 
+    // Fetch the monster data based on the ID from the route parameters
     const fetchMonster = async () => {
       try {
-        const response = await foeService.getOne(route.params.id)
+        const response = await foeService.getOne(route.params.id);
         monster.value = response.data.data // Store the entire data object
       } catch (error) {
-        console.error('Error fetching monster:', error)
+        console.error('Error fetching monster:', error);
       }
     }
 
-    onMounted(fetchMonster)
+    // Helper function to get the monster image URL
+    onMounted(fetchMonster);
 
+    // Function to construct the URL for the images
     return {
       monster,
       getMonsterImage: (imagePath) => {
-        return `http://localhost:8000/storage/${imagePath}`
+        return `http://localhost:8000/storage/${imagePath}`;
       },
       getMaterialTypeIcon: (iconPath) => {
-        return iconPath ? `http://localhost:8000/storage/${iconPath}` : '/img/default_material.png'
+        return `http://localhost:8000/storage/${iconPath}`;
       }
     }
   }

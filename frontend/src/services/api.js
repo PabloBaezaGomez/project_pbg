@@ -1,35 +1,38 @@
-import axios from 'axios'
+import axios from 'axios';
 
+// Create an axios instance with base URL and default headers
 const api = axios.create({
   baseURL: 'http://localhost:8000/api',
   headers: {
     Accept: 'application/json',
   },
-})
+});
 
 // Add request interceptor to include auth token and handle content type
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token');
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+    config.headers.Authorization = `Bearer ${token}`;
   }
 
   // Only set Content-Type to application/json if it's not already defined
   // This prevents overriding 'multipart/form-data' for file uploads
   if (!config.headers['Content-Type'] && !config.headers['content-type']) {
-    config.headers['Content-Type'] = 'application/json'
+    config.headers['Content-Type'] = 'application/json';
   }
 
-  return config
-})
+  return config;
+});
 
+// Authentication service
 export const authService = {
   login: (credentials) => api.post('/login', credentials),
   register: (userData) => api.post('/register', userData),
   logout: () => api.post('/logout'),
   getCurrentUser: () => api.get('/user'),
-}
+};
 
+// Equipment service
 export const equipmentService = {
   getAll: () => api.get('/equipment'),
   getUserEquipment: () => api.get('/user/equipment'),
@@ -41,11 +44,12 @@ export const equipmentService = {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-    })
-    return response
+    });
+    return response;
   },
-}
+};
 
+// Material service
 export const materialService = {
   getAll: () => api.get('/materials'),
   getUserMaterials: () => api.get('/user/materials'),
@@ -56,8 +60,9 @@ export const materialService = {
     }),
   getMaterialTypes: () => api.get('/material-types'),
   create: (materialData) => api.post('/materials', materialData),
-}
+};
 
+// Foe (monster) service
 export const foeService = {
   getAll: () => api.get('/foes'),
   getOne: (id) => api.get(`/foes/${id}`),
@@ -68,9 +73,9 @@ export const foeService = {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-    })
-    return response
+    });
+    return response;
   },
-}
+};
 
-export default api
+export default api;

@@ -14,17 +14,19 @@ use App\Models\MaterialUser;
 
 class EquipmentController extends Controller
 {
+    /**
+     * This method retrieves all equipment along with their types and returns them in a JSON response.
+     * It maps the equipment data to include only necessary fields and their associated type information.
+     * Returns also the equipment type with its path, to show it to the user.
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         $equipment = Equipment::with('type')->get()->map(function ($equipment) {
             return [
                 'equipment_id' => $equipment->equipment_id,
                 'equipment_name' => $equipment->equipment_name,
-                'equipment_description' => $equipment->equipment_description,
-                'equipment_image' => $equipment->equipment_image,
-                'equipment_stat' => $equipment->equipment_stat,
                 'type' => [
-                    'id' => $equipment->type->equipment_type_id,
                     'name' => $equipment->type->equipment_type_name,
                     'icon' => $equipment->type->equipment_type_icon
                 ]
@@ -34,6 +36,11 @@ class EquipmentController extends Controller
         return response()->json($equipment);
     }
 
+    /**
+     * This method retrieves the equipment associated with the authenticated user.
+     * It returns the equipment data in a JSON response in a similar way to the index function.
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
     public function userEquipment()
     {
         $user = Auth::user();
@@ -41,6 +48,12 @@ class EquipmentController extends Controller
         return response()->json($equipment);
     }
 
+    /**
+     * This method retrieves the materials required for a specific equipment item.
+     * It returns the materials in a JSON response, including their types.
+     * @param \App\Models\Equipment $equipment
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
     public function getMaterials(Equipment $equipment)
     {
         return response()->json([
@@ -49,6 +62,12 @@ class EquipmentController extends Controller
         ]);
     }
 
+    /**
+     * This method retrieves detailed information about a specific equipment item.
+     * It includes the equipment's ID, name, description, image, stats, type, and required materials.
+     * @param \App\Models\Equipment $equipment
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
     public function show(Equipment $equipment)
     {
         return response()->json([
@@ -61,7 +80,6 @@ class EquipmentController extends Controller
                     'equipment_image' => $equipment->equipment_image,
                     'equipment_stat' => $equipment->equipment_stat,
                     'type' => [
-                        'id' => $equipment->type->equipment_type_id,
                         'name' => $equipment->type->equipment_type_name,
                         'icon' => $equipment->type->equipment_type_icon
                     ],
@@ -82,6 +100,16 @@ class EquipmentController extends Controller
         ]);
     }
 
+    /**
+     * This method allows a user to craft equipment if they have the required materials.
+     * It checks if the user has all the necessary materials, deducts them from the user's inventory,
+     * and then adds the equipment to the user's collection.
+     * If the user already has the equipment, it returns an error message.
+     * If the user does not have enough materials, it returns a list of missing materials.
+     * @param \Illuminate\Http\Request $request
+     * @throws \Exception
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
     public function craftEquipment(Request $request)
     {
         $request->validate([
@@ -167,6 +195,13 @@ class EquipmentController extends Controller
         }
     }
 
+    /**
+     * This method allows the creation of new equipment by validating the request data,
+     * handling file uploads, and storing the equipment along with its required materials.
+     * It returns a JSON response indicating success or failure.
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -234,6 +269,11 @@ class EquipmentController extends Controller
         }
     }
 
+    /**
+     * This method retrieves all equipment types and returns them in a JSON response.
+     * It includes the type's ID, name, and icon.
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
     public function getTypes()
     {
         $types = EquipmentType::all();

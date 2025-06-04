@@ -1,4 +1,5 @@
 <template>
+  <!-- Not really a view, logouts in the endpoint and removes the localStorage -->
   <div class="logout-container">
     <h2>Logging out...</h2>
   </div>
@@ -14,6 +15,7 @@ export default {
     const router = useRouter()
     const authStore = useAuthStore()
 
+    // Automatically log out the user when this component is mounted
     onMounted(async () => {
       try {
         await authStore.logout()

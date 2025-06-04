@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id('equipment_type_id');
             $table->string('equipment_type_name');
             $table->string('equipment_type_icon')->nullable();
-            $table->timestamps(); // Added timestamps
+            $table->timestamps();
         });
     }
 
