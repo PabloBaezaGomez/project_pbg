@@ -21,7 +21,6 @@ class MaterialController extends Controller
             return [
                 'material_id' => $material->material_id,
                 'material_name' => $material->material_name,
-                'material_description' => $material->material_description,
                 'material_rarity' => $material->material_rarity,
                 'type' => [
                     'id' => $material->type->material_type_id,

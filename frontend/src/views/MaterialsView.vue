@@ -14,7 +14,6 @@
           <h3>{{ material.material_name }}</h3>
           <p class="material-type">{{ material.type.name }}</p>
           <p class="material-rarity">Rarity: {{ material.material_rarity }}</p>
-          <p class="material-description">{{ material.material_description }}</p>
         </router-link>
 
         <div v-if="authStore.token" class="material-actions">
