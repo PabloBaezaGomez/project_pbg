@@ -49,20 +49,6 @@ class EquipmentController extends Controller
     }
 
     /**
-     * This method retrieves the materials required for a specific equipment item.
-     * It returns the materials in a JSON response, including their types.
-     * @param \App\Models\Equipment $equipment
-     * @return mixed|\Illuminate\Http\JsonResponse
-     */
-    public function getMaterials(Equipment $equipment)
-    {
-        return response()->json([
-            'success' => true,
-            'data' => $equipment->materials()->with('type')->get()
-        ]);
-    }
-
-    /**
      * This method retrieves detailed information about a specific equipment item.
      * It includes the equipment's ID, name, description, image, stats, type, and required materials.
      * @param \App\Models\Equipment $equipment

@@ -33,27 +33,12 @@ class FoeController extends Controller
      */
     public function show($id)
     {
-        $foe = Foe::with(['type', 'materials.type'])->findOrFail($id);
+        $foe = Foe::with(['type', 'materials.type'])->find($id);
         return response()->json([
             'data' => [
                 'foe' => $foe,
                 'materials' => $foe->materials
             ]
-        ]);
-    }
-
-    /**
-     * Get materials for a specific foe.
-     * This method retrieves the materials associated with a foe, including their types.
-     *
-     * @param \App\Models\Foe $foe
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getMaterials(Foe $foe)
-    {
-        return response()->json([
-            'success' => true,
-            'data' => $foe->materials()->with('type')->get()
         ]);
     }
 
@@ -101,13 +86,13 @@ class FoeController extends Controller
 
             if ($request->hasFile('foe_icon')) {
                 $iconFile = $request->file('foe_icon');
-                $iconName = 'icon_' . Str::uuid() . '.' . $iconFile->getClientOriginalExtension();
+                $iconName = 'icon_' . $validated['foe_name'] . '.' . $iconFile->getClientOriginalExtension();
                 $iconPath = $iconFile->storeAs('monster_icon', $iconName, 'public');
             }
 
             if ($request->hasFile('foe_image')) {
                 $imageFile = $request->file('foe_image');
-                $imageName = 'image_' . Str::uuid() . '.' . $imageFile->getClientOriginalExtension();
+                $imageName = 'image_' . $validated['foe_name'] . '.' . $imageFile->getClientOriginalExtension();
                 $imagePath = $imageFile->storeAs('monster_image', $imageName, 'public');
             }
 

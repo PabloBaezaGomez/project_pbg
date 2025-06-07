@@ -1,5 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
+import { createRouter, createWebHistory } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+import { watch } from 'vue';
 
 const routes = [
   // Redirects
@@ -31,6 +32,7 @@ const routes = [
     path: '/UserEquipments',
     name: 'UserEquipments',
     component: () => import('../views/UserEquipmentsView.vue'),
+    meta: { requiresAuth: true },
   },
   {
     path: '/newEquipment',
@@ -107,8 +109,6 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 })
-
-import { watch } from 'vue'
 
 // Navigation guard
 router.beforeEach(async (to, from, next) => {
