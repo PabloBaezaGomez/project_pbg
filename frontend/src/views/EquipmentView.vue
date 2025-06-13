@@ -182,7 +182,7 @@ export default {
   align-items: center;
   gap: 10px;
   padding: 10px;
-  border: 1px solid var(--bordercolor);
+  border: 1px solid var(--bordercard);
   border-radius: 5px;
   text-decoration: none; /* Add this */
   color: inherit; /* Add this */

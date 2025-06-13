@@ -289,7 +289,6 @@ export default {
 .equipment-section {
   margin-top: 30px;
   padding: 20px;
-  border: 1px solid var(--color-border);
   border-radius: 8px;
 }
 
@@ -306,7 +305,7 @@ export default {
   display: flex;
   align-items: center;
   padding: 10px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--bordercard);
   border-radius: 6px;
   text-decoration: none;
   color: inherit;
