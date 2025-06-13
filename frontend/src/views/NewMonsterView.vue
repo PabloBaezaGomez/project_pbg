@@ -42,8 +42,8 @@
           class="form-select"
         >
           <option value="">Select size</option>
-          <option value="small">Small</option>
-          <option value="big">Big</option>
+          <option value="Small">Small</option>
+          <option value="Big">Big</option>
         </select>
       </div>
 
@@ -425,7 +425,7 @@ export default {
 
 .remove-btn {
   background: var(--removebutton);
-  color: var(--textbutton);
+  color: var(--textcancelbutton);
   border: none;
   padding: 10px 15px;
   border-radius: 4px;

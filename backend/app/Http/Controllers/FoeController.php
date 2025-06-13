@@ -68,7 +68,7 @@ class FoeController extends Controller
         $validated = $request->validate([
             'foe_name' => 'required|string|max:255|unique:foes',
             'foe_type' => 'required|exists:foe_types,foe_type_id',
-            'foe_size' => 'required|in:big,small',
+            'foe_size' => 'required|in:Big,Small',
             'foe_description' => 'required|string',
             'foe_icon' => 'required|file|max:20500',
             'foe_image' => 'required|file|max:20500',
@@ -101,8 +101,8 @@ class FoeController extends Controller
                 'foe_type' => $validated['foe_type'],
                 'foe_size' => $validated['foe_size'],
                 'foe_description' => $validated['foe_description'],
-                'foe_icon' => $iconPath ? '/storage/' . $iconPath : null,
-                'foe_image' => $imagePath ? '/storage/' . $imagePath : null
+                'foe_icon' => $iconPath ? $iconPath : null,
+                'foe_image' => $imagePath ? $imagePath : null
             ]);
 
             // Attach materials with drop rates
