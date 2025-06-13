@@ -66,7 +66,7 @@ export default {
 /**All the variables are in base.css */
 .equipment-card {
   background-color: var(--backgroundcard);
-  border: 1px solid var(--bordercolor);
+  border: 1px solid var(--bordercard);
   border-radius: 8px;
   padding: 15px;
   text-align: center;
